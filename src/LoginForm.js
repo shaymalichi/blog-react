@@ -1,4 +1,5 @@
 import React from 'react';
+import {Button} from "@mui/material";
 
 
 function LoginForm() {
@@ -12,7 +13,7 @@ function LoginForm() {
                 <label htmlFor="password">Password:</label>
                 <input type="password" id="password" name="password" />
             </div>
-            <button type="submit">Login</button>
+            <Button variant="contained">Login</Button>
         </form>
     );
 }
