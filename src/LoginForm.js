@@ -1,17 +1,15 @@
 import React from 'react';
-import {Button} from "@mui/material";
+import {Button, TextField} from "@mui/material";
 
 
 function LoginForm() {
     return (
         <form>
             <div>
-                <label htmlFor="username">Username:</label>
-                <input type="text" id="username" name="username" />
+                <TextField id="outlined-basic" label="Username" variant="outlined" />
             </div>
             <div>
-                <label htmlFor="password">Password:</label>
-                <input type="password" id="password" name="password" />
+                <TextField id="outlined-basic" label="password" variant="outlined" />
             </div>
             <Button variant="contained">Login</Button>
         </form>

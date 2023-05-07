@@ -25,6 +25,7 @@ ReactDOM.render(
           <Route path="/posts/:id" element={<IdRender />} />
 
 
+
         </Routes>
       </BrowserRouter>
     </React.StrictMode>,
