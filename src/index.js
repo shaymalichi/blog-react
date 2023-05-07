@@ -19,7 +19,6 @@ ReactDOM.render(
           <Route path="/" element={<App />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/post" element={<Post />} />
           <Route path="/new-post" element={<NewPost />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/posts/:id" element={<IdRender />} />

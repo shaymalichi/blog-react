@@ -14,9 +14,6 @@ function Navbar() {
             <Link to="/contact">Contact Me</Link>
           </li>
           <li>
-            <a href="/post">Post</a>
-          </li>
-          <li>
             <Link to="/new-post">New Post</Link>
           </li>
           <li>
