@@ -1,27 +1,29 @@
+import { Link } from 'react-router-dom';
+
 function Navbar() {
   return (
-    <nav>
-      <ul>
-        <li>
-          <a href="/">Home</a>
-        </li>
-        <li>
-          <a href="/about">About Me</a>
-        </li>
-        <li>
-          <a href="/contact">Contact Me</a>
-        </li>
-        <li>
-          <a href="/post">Post</a>
-        </li>
-        <li>
-          <a href="/new-post">New Post</a>
-        </li>
-        <li>
-          <a id="login">login</a>
-        </li>
-      </ul>
-    </nav>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/about">About Me</Link>
+          </li>
+          <li>
+            <Link to="/contact">Contact Me</Link>
+          </li>
+          <li>
+            <a href="/post">Post</a>
+          </li>
+          <li>
+            <Link to="/new-post">New Post</Link>
+          </li>
+          <li>
+            <Link to="login">login</Link>
+          </li>
+        </ul>
+      </nav>
   );
 }
 
