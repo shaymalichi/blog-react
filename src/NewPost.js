@@ -1,5 +1,13 @@
-import {Button, TextField, Grid} from "@mui/material";
+import {Button, TextField, Grid, createTheme, ThemeProvider} from "@mui/material";
 import React from "react";
+import {orange} from "@mui/material/colors";
+
+
+const theme = createTheme({
+    status: {
+        danger: orange[500],
+    },
+});
 
 const NewPost = () => {
   return (
@@ -22,7 +30,9 @@ const NewPost = () => {
                   defaultValue="Default Value"
               />
               <br />
-              <Button variant="contained">Send</Button>
+              <ThemeProvider theme={theme}>
+                  <Button variant="contained" sx={{ backgroundColor: theme.status.danger }}>Send</Button>
+              </ThemeProvider>
           </div>
       </Grid>
   );
