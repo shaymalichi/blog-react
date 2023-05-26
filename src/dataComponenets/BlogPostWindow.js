@@ -9,7 +9,7 @@ const BlogPostWindow = ({ posts }) => {
                     <h1 className="title">{post.title}</h1>
                     <p className="content">{post.body}</p>
                     <div className="footer">
-                        <span className="published-date">2.3.2020</span>
+                        <span className="published-date">{post.created_at}</span>
                         <span className="username">{post.id}</span>
                     </div>
                 </div>
