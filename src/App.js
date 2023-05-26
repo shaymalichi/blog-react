@@ -3,9 +3,7 @@ import {useEffect, useState} from "react";
 import "./style.css";
 import LatestPosts from "./staticComponents/LatestPosts";
 import PopularPosts from "./staticComponents/PopularPosts";
-import Post from "./dataComponenets/Post";
 import axios from "axios";
-import PostStructure from "./dataComponenets/PostStructure";
 import BlogPostWindow from "./dataComponenets/BlogPostWindow";
 
 
