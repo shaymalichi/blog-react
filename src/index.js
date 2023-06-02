@@ -8,10 +8,21 @@ import NewPost from './dataComponenets/NewPost';
 import Navbar from './staticComponents/Navbar';
 import LoginForm from "./LoginForm";
 import IdRender from "./IdRender";
+import {createTheme, ThemeProvider} from "@mui/material";
+import {green} from "@mui/material/colors";
+
+const theme = createTheme({
+    status: {
+        danger: green[500],
+    },
+});
 
 ReactDOM.render(
     <React.StrictMode>
       <BrowserRouter>
+          <ThemeProvider theme={theme}>
+
+
         <Navbar />
         <Routes>
           <Route path="/" element={<App />} />
@@ -24,7 +35,9 @@ ReactDOM.render(
 
 
         </Routes>
+          </ThemeProvider>
       </BrowserRouter>
     </React.StrictMode>,
     document.getElementById('root')
+
 );

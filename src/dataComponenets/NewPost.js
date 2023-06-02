@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, TextField, Grid, createTheme, ThemeProvider } from "@mui/material";
-import { orange } from "@mui/material/colors";
 import axios from "axios";
-
-
-const theme = createTheme({
-    status: {
-        danger: orange[500],
-    },
-});
+import theme from '../theme';
 
 const NewPost = () => {
     const [posts, setPosts] = useState([]);
@@ -36,17 +29,6 @@ const NewPost = () => {
                 console.error(error);
             });
     };
-
-    // useEffect(() => {
-    //     const getData = () => {
-    //         axios.post('http://localhost:5000/new-post', data).then((res) => {
-    //             console.log(res.data);
-    //             setPosts(res.data);
-    //         });
-    //     };
-    //     getData().then((r) => {});
-    // }, []);
-
     return (
         <Grid
             container

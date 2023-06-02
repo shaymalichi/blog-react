@@ -1,13 +1,8 @@
 import React from 'react';
 import {Button, TextField, Grid, ThemeProvider, createTheme} from "@mui/material";
-import {green, orange} from "@mui/material/colors";
+import theme from './theme';
 
 
-const theme = createTheme({
-    status: {
-        danger: green[500],
-    },
-});
 
 function LoginForm() {
     return (
