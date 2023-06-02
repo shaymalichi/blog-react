@@ -5,16 +5,16 @@ import theme from '../theme';
 
 const NewPost = () => {
     const [posts, setPosts] = useState([]);
+    const [postTitle, setPostTitle] = useState("");
     const [postContent, setPostContent] = useState("");
 
     const sendData = (data) => {
         const postData = {
-            user_id: 10041,
+            user_id: 2666666,
             id: 456,
-            title: "bitch",
+            title: postTitle,
             body: data,
-            created_at : new Date().toISOString().slice(0, 19).replace('T', ' ')
-
+            created_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
         };
 
         axios
@@ -29,6 +29,7 @@ const NewPost = () => {
                 console.error(error);
             });
     };
+
     return (
         <Grid
             container
@@ -40,6 +41,14 @@ const NewPost = () => {
         >
             <div>
                 <h2>New Post</h2>
+                <TextField
+                    id="outlined-basic"
+                    label="Enter Title"
+                    variant="outlined"
+                    value={postTitle}
+                    onChange={(e) => setPostTitle(e.target.value)}
+                />
+                <br />
                 <TextField
                     id="outlined-multiline-static"
                     label="Enter Blog Post.."

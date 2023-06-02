@@ -5,16 +5,15 @@ from flask import Flask, request
 import mysql.connector as mysql
 import json
 from flask_cors import CORS
-from datetime import datetime
 from flask import jsonify
 
 
 
 db = mysql.connect(
-	host = "localhost",
-	user = "root",
-	passwd = "12345678",
-	database = "new_schema")
+	host="localhost",
+	user="root",
+	passwd="12345678",
+	database="new_schema")
 
 print(db)
 
@@ -23,13 +22,12 @@ CORS(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
-def manage_cities():
+def manage_posts():
 	if request.method == 'GET':
 		return get_all_posts()
 	else:
 		return add_city()
 
-#only this implemented
 
 def get_all_posts():
 	query = "select * from posts"
@@ -37,17 +35,12 @@ def get_all_posts():
 	cursor.execute(query)
 	records = cursor.fetchall()
 	cursor.close()
-	print(records)
-	# [(1, 'Herzliya', 95142), (2, 'Tel Aviv', 435855), (3, 'Jerusalem', 874186), (4, 'Bat Yam', 128898), (5, 'Ramat Gan', 153135), (6, 'Eilat', 47800), (7, 'Petah Tikva', 233577), (8, 'Tveriya', 41300)]
-	header = ['user_id','id','title','body', 'created_at'] # need to add time 
+	header = ['user_id','id','title','body', 'created_at']
 	data = []
 	for r in records:
-		#new
 		record_dict = dict(zip(header, r))
 		record_dict['created_at'] = record_dict['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 		data.append(record_dict)
-		#old
-		# data.append(dict(zip(header, r)))
 	return json.dumps(data)
 
 
