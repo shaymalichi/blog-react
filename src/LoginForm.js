@@ -1,12 +1,13 @@
 import React from 'react';
 import {Button, TextField, Grid, ThemeProvider, createTheme} from "@mui/material";
 import theme from './theme';
+import {blue, green} from "@mui/material/colors";
 
 
 
 function LoginForm() {
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme()}>
             <Grid
                 container
                 spacing={0}
@@ -23,8 +24,8 @@ function LoginForm() {
                     <div>
                         <TextField id="outlined-basic" label="password" variant="outlined" />
                     </div>
-                    <ThemeProvider theme={theme}>
-                        <Button variant="contained" sx={{ backgroundColor: theme.status.danger }}>Login</Button>
+                    <ThemeProvider theme={theme(blue)}>
+                        <Button variant="contained" >Login</Button>
                     </ThemeProvider>
                 </form>
             </Grid>

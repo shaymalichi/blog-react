@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, TextField, Grid, createTheme, ThemeProvider } from "@mui/material";
 import axios from "axios";
 import theme from '../theme';
+import {green} from "@mui/material/colors";
 
 const NewPost = () => {
     const [posts, setPosts] = useState([]);
@@ -10,8 +11,8 @@ const NewPost = () => {
 
     const sendData = (data) => {
         const postData = {
-            user_id: 2666666,
-            id: 456,
+            user_id: 2004,
+            id: 43356,
             title: postTitle,
             body: data,
             created_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
@@ -23,7 +24,7 @@ const NewPost = () => {
                 console.log("this is my data");
                 console.log(res.data);
                 console.log("this is my end");
-                setPosts(res.data);
+                //setPosts(res.data);
             })
             .catch((error) => {
                 console.error(error);
@@ -58,10 +59,10 @@ const NewPost = () => {
                     onChange={(e) => setPostContent(e.target.value)}
                 />
                 <br />
-                <ThemeProvider theme={theme}>
+                <ThemeProvider theme={theme()}>
                     <Button
                         variant="contained"
-                        sx={{ backgroundColor: theme.status.danger }}
+
                         onClick={() => sendData(postContent)}
                     >
                         Send

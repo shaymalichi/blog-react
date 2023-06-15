@@ -6,30 +6,11 @@ import PopularPosts from "./staticComponents/PopularPosts";
 import axios from "axios";
 import BlogPostWindow from "./dataComponenets/BlogPostWindow";
 import {createTheme, ThemeProvider} from "@mui/material";
-import {green} from "@mui/material/colors";
+import {blue, green} from "@mui/material/colors";
 import { Button } from "@mui/material";
-
-
-const theme = createTheme({
-    status: {
-        danger: green[500],
-    },
-});
+import theme from "./theme"
 
 function App() {
-    const theme = createTheme({
-        // Customize your theme here
-        palette: {
-            primary: {
-                main: "#f44336",
-            },
-            secondary: {
-                main: "#2196f3",
-            },
-        },
-    });
-
-
     const [posts, setPosts] = useState([])
 
     useEffect( () => {
@@ -43,8 +24,8 @@ function App() {
     return (
 
         <div>
+            <ThemeProvider theme={theme(blue)}>
             <main>
-                <ThemeProvider theme={theme}>
                 <h1>This is my blog</h1>
                 <div className="content">
                     <BlogPostWindow posts={posts}/>
@@ -53,8 +34,8 @@ function App() {
                         <PopularPosts/>
                     </div>
                 </div>
-            </ThemeProvider>
             </main>
+            </ThemeProvider>
         </div>
 
     );

@@ -10,6 +10,7 @@ import LoginForm from "./LoginForm";
 import IdRender from "./IdRender";
 import {createTheme, ThemeProvider} from "@mui/material";
 import {green} from "@mui/material/colors";
+import Post from "./dataComponenets/post";
 
 const theme = createTheme({
     status: {
@@ -30,7 +31,7 @@ ReactDOM.render(
           <Route path="/contact" element={<Contact />} />
           <Route path="/new-post" element={<NewPost />} />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/posts/:id" element={<IdRender />} />
+          <Route path="/posts/:id" element={<Post />} />
 
 
 

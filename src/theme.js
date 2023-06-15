@@ -1,9 +1,23 @@
 import { createTheme } from '@mui/material/styles';
-import {yellow} from '@mui/material/colors';
+import {red, yellow} from '@mui/material/colors';
 
-const theme = createTheme({
-    status: {
-        danger: yellow[500],
+
+
+
+
+const theme = (color = yellow) => createTheme({
+
+    palette: {
+
+        primary: {
+            main : color.A400
+        },
+        secondary :{
+            main:yellow.A700
+        },error:{
+            main:red.A400
+        }
+
     },
 });
 

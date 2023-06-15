@@ -6,7 +6,7 @@ const BlogPostWindow = ({ posts }) => {
         <div>
             {posts.map((post) => (
                 <div className="blog-post-window" key={post.id}>
-                    <h1 className="title">{post.title}</h1>
+                    <a href={`posts/${post.id}`} className="title">{post.title}</a>
                     <p className="content">{post.body}</p>
                     <div className="footer">
                         <span className="published-date">{post.created_at}</span>

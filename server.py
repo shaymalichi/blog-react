@@ -7,13 +7,11 @@ import json
 from flask_cors import CORS
 from flask import jsonify
 
-
-
 db = mysql.connect(
-	host="localhost",
-	user="root",
-	passwd="12345678",
-	database="new_schema")
+    host="localhost",
+    user="root",
+    passwd="12345678",
+    database="new_schema")
 
 print(db)
 
@@ -23,38 +21,34 @@ CORS(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def manage_posts():
-	if request.method == 'GET':
-		return get_all_posts()
-	else:
-		return add_city()
+    if request.method == 'GET':
+        return get_all_posts()
+    else:
+        return add_city()
 
 
 def get_all_posts():
-	query = "select * from posts"
-	cursor = db.cursor()
-	cursor.execute(query)
-	records = cursor.fetchall()
-	cursor.close()
-	header = ['user_id','id','title','body', 'created_at']
-	data = []
-	for r in records:
-		record_dict = dict(zip(header, r))
-		record_dict['created_at'] = record_dict['created_at'].strftime("%Y-%m-%d %H:%M:%S")
-		data.append(record_dict)
-	return json.dumps(data)
+    print('test')
+    query = "select * from posts"
+    cursor = db.cursor()
+    cursor.execute(query)
+    records = cursor.fetchall()
+    cursor.close()
+    header = ['user_id', 'id', 'title', 'body', 'created_at']
+    data = []
+    for r in records:
+        record_dict = dict(zip(header, r))
+        record_dict['created_at'] = record_dict['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+        data.append(record_dict)
+    return json.dumps(data)
 
 
-#TODO
+# TODO
+@app.route('/post', methods=['POST'])
+def get_city():
+    id = str(request.get_json()['id']) # query that gets the post by id
+    return get_all_posts()
 
-# def get_city(id):
-# 	query = "select id, name, population from cities where id = %s"
-# 	values = (id,)
-# 	cursor = db.cursor()
-# 	cursor.execute(query, values)
-# 	record = cursor.fetchone()
-# 	cursor.close()
-# 	header = ['id', 'name', 'population']
-# 	return json.dumps(dict(zip(header, record)))
 
 @app.route('/new-post', methods=['POST'])
 def add_city():
@@ -72,4 +66,4 @@ def add_city():
 
 
 if __name__ == "__main__":
-	app.run()
+    app.run()
