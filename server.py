@@ -13,7 +13,13 @@ db = mysql.connect(
     passwd="12345678",
     database="new_schema")
 
-print(db)
+
+# db = mysql.connect( # the aws database
+#     host="shay-amazing-batabase.cbrdyb6rueag.eu-central-1.rds.amazonaws.com",
+#     user="admin",
+#     passwd="Shay12345678",
+#     database="new_schema")
+
 
 app = Flask(__name__)
 CORS(app)
@@ -41,6 +47,16 @@ def get_all_posts():
         record_dict['created_at'] = record_dict['created_at'].strftime("%Y-%m-%d %H:%M:%S")
         data.append(record_dict)
     return json.dumps(data)
+
+def get_post(id):
+    query = "select user_id, id, title, body, created_at from posts where id = %s"
+    values = (id,)
+    cursor = db.cursor()
+    cursor.execute(query, values)
+    record = cursor.fetchone()
+    cursor.close()
+    header = ['id', 'name', 'population']
+    return json.dumps(dict(zip(header, record)))
 
 
 # TODO
