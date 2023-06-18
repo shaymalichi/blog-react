@@ -3,27 +3,36 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 
 const Post = () => {
-    const {id} = useParams();
+    const { id } = useParams();
 
-    const [posts,setPost] = useState([]) //{}
+    const [post, setPost] = useState({});
 
     useEffect(() => {
-        const getPost = () => axios.post('http://localhost:5000/post' ,{'id' : Number(id)} ).then((res) => setPost(res.data));
+        const getPost = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/post/${id}`);
+                setPost(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
         getPost();
-    } , [])
+    }, [id]);
 
-    return  <div>
-        {posts.filter(post => post.id === Number(id) ).map((post) => (
-            <div className="blog-post-window" key={post.id}>
-                <a href={`posts/${post.id}`} className="title">{post.title}</a>
-                <p className="content">{post.body}</p>
-                <div className="footer">
-                    <span className="published-date">{post.created_at}</span>
-                    <span className="username">{post.id}</span>
+    return (
+        <div>
+            {post && (
+                <div className="blog-post-window" key={post.id}>
+                    <a href={`posts/${post.id}`} className="title">{post.title}</a>
+                    <p className="content">{post.body}</p>
+                    <div className="footer">
+                        <span className="published-date">{post.created_at}</span>
+                        <span className="username">{post.user_id}</span>
+                    </div>
                 </div>
-            </div>
-        ))}
-    </div>
-}
+            )}
+        </div>
+    );
+};
 
 export default Post;

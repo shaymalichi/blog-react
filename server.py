@@ -35,7 +35,7 @@ def manage_posts():
 
 def get_all_posts():
     print('test')
-    query = "select * from posts"
+    query = "select * from posts1"
     cursor = db.cursor()
     cursor.execute(query)
     records = cursor.fetchall()
@@ -48,15 +48,22 @@ def get_all_posts():
         data.append(record_dict)
     return json.dumps(data)
 
-def get_post(id):
-    query = "select user_id, id, title, body, created_at from posts where id = %s"
-    values = (id,)
+@app.route('/post/<int:post_id>', methods=['GET'])
+def get_post(post_id):
+    query = "select user_id, id, title, body, created_at from posts1 where id = %s"
+    values = (post_id,)
     cursor = db.cursor()
     cursor.execute(query, values)
     record = cursor.fetchone()
     cursor.close()
-    header = ['id', 'name', 'population']
-    return json.dumps(dict(zip(header, record)))
+
+    if record:
+        header = ['user_id', 'id', 'title', 'body', 'created_at']
+        record_dict = dict(zip(header, record))
+        record_dict['created_at'] = record_dict['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+        return jsonify(record_dict)
+    else:
+        return jsonify({'error': 'Post not found'})
 
 
 # TODO
@@ -69,8 +76,8 @@ def get_city():
 @app.route('/new-post', methods=['POST'])
 def add_city():
     data = request.get_json()
-    query = "INSERT INTO posts (user_id, id, title, body, created_at) VALUES (%s, %s, %s, %s, %s)"
-    values = (data['user_id'], data['id'], data['title'], data['body'], data['created_at'])
+    query = "INSERT INTO posts1 (user_id, title, body, created_at) VALUES (%s, %s, %s, %s)"
+    values = (data['user_id'], data['title'], data['body'], data['created_at'])
     cursor = db.cursor()
     cursor.execute(query, values)
     db.commit()

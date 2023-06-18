@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Button, TextField, Grid, createTheme, ThemeProvider } from "@mui/material";
 import axios from "axios";
 import theme from '../theme';
-import {green} from "@mui/material/colors";
 
 const NewPost = () => {
     const [posts, setPosts] = useState([]);
@@ -11,8 +10,7 @@ const NewPost = () => {
 
     const sendData = (data) => {
         const postData = {
-            user_id: 2004,
-            id: 43356,
+            user_id: "shay810",
             title: postTitle,
             body: data,
             created_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
