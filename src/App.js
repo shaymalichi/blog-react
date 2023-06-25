@@ -42,13 +42,3 @@ function App() {
 }
 
 export default App;
-
-
-//temp
-// {posts?.map(post => {
-//     return(
-//         <div>
-//             id : {post.user_id}
-//         </div>
-//     )
-// })}

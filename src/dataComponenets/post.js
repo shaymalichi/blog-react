@@ -10,7 +10,7 @@ const Post = () => {
     useEffect(() => {
         const getPost = async () => {
             try {
-                const response = await axios.get(`/posts/${id}`);// change to posts
+                const response = await axios.get(`/posts/${id}`);
                 setPost(response.data);
             } catch (error) {
                 console.log(error);
