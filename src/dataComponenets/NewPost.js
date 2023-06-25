@@ -17,7 +17,7 @@ const NewPost = () => {
         };
 
         axios
-            .post('http://localhost:5000/new-post', postData)
+            .post('/new-post', postData)
             .then((res) => {
                 console.log("this is my data");
                 console.log(res.data);

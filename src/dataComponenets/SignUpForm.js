@@ -19,7 +19,7 @@ function SignupForm() {
         };
 
         // Make a POST request to your backend API endpoint
-        axios.post('http://localhost:5000/signup', data)
+        axios.post('/signup', data)
             .then(response => {
                 // Handle the response from the backend if needed
                 console.log(response.data);
