@@ -1,6 +1,7 @@
 # pip3 install mysql-connector-python
 # pip3 install flask_cors
 import uuid
+from datetime import datetime
 
 from flask import Flask, request, make_response, abort, session
 import mysql.connector as mysql
@@ -115,48 +116,57 @@ def login():
     data = request.get_json()
     username = data['username']
     password = data['password']
-    query_for_check_password = "SELECT username, password FROM users1 WHERE username = %s" #can be improved
+    query_for_check_password = "SELECT username, password FROM users1 WHERE username = %s"
     values_for_check_password = (username,)
     cursor = db.cursor()
     cursor.execute(query_for_check_password, values_for_check_password)
     record = cursor.fetchone()
     cursor.close()
-    hashed_password = ""
+
     if record:
         hashed_password = record[1]
+        if bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8')):
+            # Successful login
+            session_id = str(uuid.uuid4())
+            query_for_sessions = "INSERT INTO sessions (username, session_id) VALUES (%s, %s)"
+            values_for_sessions = (username, session_id)
+            cursor = db.cursor()
+            cursor.execute(query_for_sessions, values_for_sessions)
+            db.commit()
+            cursor.close()
+            resp = jsonify({'success': True})
+            resp.set_cookie("session_id", session_id)
+            return resp
+        else:
+            # Incorrect password
+            abort(401)
     else:
-        print("is it here? after record false")
+        # User not found
         abort(401)
-
-
-    if bcrypt.hashpw(password.encode('utf-8'), hashed_password.encode('utf-8')) != hashed_password.encode('utf-8'):
-        print(hashed_password)
-        print("after checking the password hashing")
-        abort(401)
-
-    #sessions
-    query_for_sessions = "INSERT INTO sessions (username, session_id) VALUES (%s, %s)"
-    session_id = str(uuid.uuid4())
-    values_for_sessions = (username, session_id)
-    cursor = db.cursor()
-    cursor.execute(query_for_sessions, values_for_sessions)
-
-    db.commit()
-    cursor.close()
-    resp = make_response()
-    resp.set_cookie("session_id", session_id)
-    print(resp)
-    return resp
 
 @app.route('/logout', methods=['POST'])
 def logout():
-    session.clear()  # Clear the session data on the server-side
-    return jsonify({'success': True})
+    data = request.get_json()
+    username = data['username']
+    session.clear()
+    resp = make_response()
+    resp.set_cookie("session_id", "", expires=datetime.now())
+    query = "DELETE FROM sessions WHERE username = (%s);"
+    value = (username,)
+    cursor = db.cursor()
+    cursor.execute(query, value)
+    db.commit()
+    cursor.close()
+    return resp
+
+
+
 
 
 
 
 if __name__ == "__main__":
+    app.secret_key = '123'
     app.run()
 
 

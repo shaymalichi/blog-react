@@ -38,7 +38,7 @@ function LoginForm() {
 
     const handleLogout = () => {
         // Send an API request to the backend to clear the session
-        axios.post('/logout')
+        axios.post('/logout', {username} )
             .then(() => {
                 setLoggedIn(false);
                 setUsername("");
