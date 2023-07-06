@@ -2,7 +2,7 @@
 # pip3 install flask_cors
 import uuid
 
-from flask import Flask, request, make_response, abort
+from flask import Flask, request, make_response, abort, session
 import mysql.connector as mysql
 import json
 #from flask_cors import CORS
@@ -37,7 +37,7 @@ def manage_posts():
     if request.method == 'GET':
         return get_all_posts()
     else:
-        return add_city()
+        return add_post()
 
 
 def get_all_posts():
@@ -82,6 +82,7 @@ def get_city():
 @app.route('/signup', methods=['POST'])
 def add_user():
     data = request.get_json()
+    print(data)
     query = "INSERT INTO users1 (username, created_at, password) VALUES (%s, %s, %s)"
     hashed = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
     print(hashed)
@@ -95,7 +96,7 @@ def add_user():
 
 
 @app.route('/new-post', methods=['POST'])
-def add_city():
+def add_post():
     data = request.get_json()
     query = "INSERT INTO posts1 (user_id, title, body, created_at) VALUES (%s, %s, %s, %s)"
     values = (data['user_id'], data['title'], data['body'], data['created_at'])
@@ -133,7 +134,6 @@ def login():
         print("after checking the password hashing")
         abort(401)
 
-
     #sessions
     query_for_sessions = "INSERT INTO sessions (username, session_id) VALUES (%s, %s)"
     session_id = str(uuid.uuid4())
@@ -145,7 +145,15 @@ def login():
     cursor.close()
     resp = make_response()
     resp.set_cookie("session_id", session_id)
+    print(resp)
     return resp
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()  # Clear the session data on the server-side
+    return jsonify({'success': True})
+
+
 
 
 if __name__ == "__main__":

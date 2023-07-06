@@ -5,9 +5,8 @@ import LatestPosts from "./staticComponents/LatestPosts";
 import PopularPosts from "./staticComponents/PopularPosts";
 import axios from "axios";
 import BlogPostWindow from "./dataComponenets/BlogPostWindow";
-import {createTheme, ThemeProvider} from "@mui/material";
-import {blue, green} from "@mui/material/colors";
-import { Button } from "@mui/material";
+import {ThemeProvider} from "@mui/material";
+import {blue} from "@mui/material/colors";
 import theme from "./theme"
 
 function App() {

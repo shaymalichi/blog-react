@@ -7,7 +7,6 @@ import Contact from './staticComponents/Contact';
 import NewPost from './dataComponenets/NewPost';
 import Navbar from './staticComponents/Navbar';
 import LoginForm from "./LoginForm";
-import IdRender from "./IdRender";
 import {createTheme, ThemeProvider} from "@mui/material";
 import {green} from "@mui/material/colors";
 import Post from "./dataComponenets/post";

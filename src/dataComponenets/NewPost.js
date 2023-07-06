@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Button, TextField, Grid, createTheme, ThemeProvider } from "@mui/material";
+import React, { useState } from "react";
+import { Button, TextField, Grid, ThemeProvider } from "@mui/material";
 import axios from "axios";
 import theme from '../theme';
 
 const NewPost = () => {
-    const [posts, setPosts] = useState([]);
+    //const [posts, setPosts] = useState([]);
     const [postTitle, setPostTitle] = useState("");
     const [postContent, setPostContent] = useState("");
 

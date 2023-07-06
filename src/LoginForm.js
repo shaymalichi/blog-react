@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { Button, TextField, Grid, ThemeProvider } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
+import {Button, Grid, TextField, ThemeProvider} from "@mui/material";
 import theme from './theme';
 import { blue } from "@mui/material/colors";
 import axios from 'axios';
 
 function LoginForm() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [greeting, setGreeting] = useState("");
 
     const handleLogin = () => {
         // Send an API request to the backend to check if the user and password exist
@@ -14,11 +18,16 @@ function LoginForm() {
             .then(response => {
                 // Handle the response from the backend
                 const data = response.data;
+                console.log(data)
                 if (data.success) {
                     // Login successful
                     console.log("Login successful");
+                    setLoggedIn(true);
+                    setGreeting(`Hello, ${username}!`);
                 } else {
                     // Login failed
+                    console.log(data.success)
+                    console.log("it seems its null: data.success")
                     console.log("Login failed");
                 }
             })
@@ -26,6 +35,41 @@ function LoginForm() {
                 console.error("Error occurred during login:", error);
             });
     };
+
+    const handleLogout = () => {
+        // Send an API request to the backend to clear the session
+        axios.post('/logout')
+            .then(() => {
+                setLoggedIn(false);
+                setUsername("");
+                setPassword("");
+                setGreeting("");
+                navigate('/login');
+            })
+            .catch(error => {
+                console.error("Error occurred during logout:", error);
+            });
+    };
+
+    if (loggedIn) {
+        return (
+            <ThemeProvider theme={theme()}>
+                <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justifyContent="center"
+                    style={{ minHeight: '100vh' }}
+                >
+                    <div>{greeting}</div>
+                    <div>
+                        <Button type="button" variant="contained" onClick={handleLogout}>Logout</Button>
+                    </div>
+                </Grid>
+            </ThemeProvider>
+        );
+    }
 
     return (
         <ThemeProvider theme={theme()}>
