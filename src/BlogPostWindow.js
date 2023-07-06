@@ -1,5 +1,5 @@
 import React from 'react';
-import './BlogPostWindow.css';
+import './style/BlogPostWindow.css';
 
 const BlogPostWindow = ({ posts }) => {
     return (

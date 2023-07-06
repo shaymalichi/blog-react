@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {Button, Grid, TextField, ThemeProvider} from "@mui/material";
-import theme from './theme';
+import theme from './style/theme';
 import { blue } from "@mui/material/colors";
 import axios from 'axios';
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, TextField, Grid, ThemeProvider } from "@mui/material";
 import axios from "axios";
-import theme from '../theme';
+import theme from './style/theme';
 
 const NewPost = () => {
     //const [posts, setPosts] = useState([]);

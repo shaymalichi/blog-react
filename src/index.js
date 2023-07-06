@@ -4,13 +4,13 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App';
 import About from './staticComponents/about';
 import Contact from './staticComponents/Contact';
-import NewPost from './dataComponenets/NewPost';
-import Navbar from './staticComponents/Navbar';
+import NewPost from './NewPost';
+import Navbar from './Navbar';
 import LoginForm from "./LoginForm";
 import {createTheme, ThemeProvider} from "@mui/material";
 import {green} from "@mui/material/colors";
-import Post from "./dataComponenets/post";
-import SignupForm from "./dataComponenets/SignUpForm";
+import Post from "./post";
+import SignupForm from "./SignUpForm";
 
 const theme = createTheme({
     status: {

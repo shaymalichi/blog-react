@@ -1,13 +1,13 @@
 import React from "react";
 import {useEffect, useState} from "react";
-import "./style.css";
+import "./style/style.css";
 import LatestPosts from "./staticComponents/LatestPosts";
 import PopularPosts from "./staticComponents/PopularPosts";
 import axios from "axios";
-import BlogPostWindow from "./dataComponenets/BlogPostWindow";
+import BlogPostWindow from "./BlogPostWindow";
 import {ThemeProvider} from "@mui/material";
 import {blue} from "@mui/material/colors";
-import theme from "./theme"
+import theme from "./style/theme"
 
 function App() {
     const [posts, setPosts] = useState([])

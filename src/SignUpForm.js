@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, TextField, Grid, ThemeProvider } from "@mui/material";
-import theme from '../theme';
+import theme from './style/theme';
 import axios from "axios";
 
 function SignupForm() {
