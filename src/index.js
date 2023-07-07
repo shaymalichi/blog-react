@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import {BrowserRouter, Route, Routes, useNavigate} from 'react-router-dom';
 import App from './App';
 import About from './staticComponents/about';
 import Contact from './staticComponents/Contact';
@@ -11,6 +11,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { green } from "@mui/material/colors";
 import Post from "./post";
 import SignupForm from "./SignUpForm";
+import axios from 'axios';
 
 const theme = createTheme({
     status: {
@@ -21,17 +22,30 @@ const theme = createTheme({
 function MainApp() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false); // Updated
     const [isUsername, setTheUsername] = React.useState("");
+
+    const handleLogout = () => {
+        axios
+            .post('/logout', { username: isUsername })
+            .then(() => {
+                setIsLoggedIn(false);
+            })
+            .catch(error => {
+                console.error('Error occurred during logout:', error);
+            });
+    };
+
+
     return (
         <React.StrictMode>
             <BrowserRouter>
                 <ThemeProvider theme={theme}>
-                    <Navbar isLoggedIn={isLoggedIn} isUsername={isUsername}/>
+                    <Navbar isLoggedIn={isLoggedIn} isUsername={isUsername} handleLogout={handleLogout}/>
                     <Routes>
                         <Route path="/" element={<App />} />
                         <Route path="/about" element={<About />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/new-post" element={<NewPost />} />
-                        <Route path="/login" element={<LoginForm setIsLoggedIn={setIsLoggedIn} setTheUsername={setTheUsername} />}/>
+                        <Route path="/login" element={<LoginForm setIsLoggedIn={setIsLoggedIn} setTheUsername={setTheUsername} />} />
                         <Route path="/posts/:id" element={<Post />} />
                         <Route path="/signup" element={<SignupForm />} />
                     </Routes>

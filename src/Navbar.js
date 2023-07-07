@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
-function Navbar({ isLoggedIn, isUsername }) {
+function Navbar({ isLoggedIn, isUsername, handleLogout }) {
   if (!isLoggedIn) {
     return (
         <nav>
@@ -29,8 +29,10 @@ function Navbar({ isLoggedIn, isUsername }) {
     );
   }
   else {
+    console.log(isLoggedIn)
     return (
         <nav>
+          <div>hi {isUsername}</div>
           <ul>
             <li>
               <Link to="/">Home</Link>
@@ -45,7 +47,7 @@ function Navbar({ isLoggedIn, isUsername }) {
               <Link to="/new-post">New Post</Link>
             </li>
             <li>
-              <Link to="/">{isUsername}</Link>
+              <Link to="/" onClick={handleLogout}>logout</Link>
             </li>
           </ul>
         </nav>

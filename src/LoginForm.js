@@ -9,7 +9,7 @@ function LoginForm({ setIsLoggedIn, setTheUsername}) {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false); //boolean value.
     const [greeting, setGreeting] = useState("");
 
     const handleLogin = () => {
@@ -38,39 +38,8 @@ function LoginForm({ setIsLoggedIn, setTheUsername}) {
             });
     };
 
-    const handleLogout = () => {
-        // Send an API request to the backend to clear the session
-        axios.post('/logout', {username} )
-            .then(() => {
-                setIsLoggedIn(false);
-                setLoggedIn(false);
-                setPassword("");
-                setGreeting("");
-                navigate('/login');
-            })
-            .catch(error => {
-                console.error("Error occurred during logout:", error);
-            });
-    };
-
     if (loggedIn) {
-        return (
-            <ThemeProvider theme={theme()}>
-                <Grid
-                    container
-                    spacing={0}
-                    direction="column"
-                    alignItems="center"
-                    justifyContent="center"
-                    style={{ minHeight: '100vh' }}
-                >
-                    <div>{greeting}</div>
-                    <div>
-                        <Button type="button" variant="contained" onClick={handleLogout}>Logout</Button>
-                    </div>
-                </Grid>
-            </ThemeProvider>
-        );
+        navigate('/')
     }
 
     return (
