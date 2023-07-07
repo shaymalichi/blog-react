@@ -41,7 +41,7 @@ function MainApp() {
                 <ThemeProvider theme={theme}>
                     <Navbar isLoggedIn={isLoggedIn} isUsername={isUsername} handleLogout={handleLogout}/>
                     <Routes>
-                        <Route path="/" element={<App />} />
+                        <Route path="/" element={<App isUsername={isUsername}/>} />
                         <Route path="/about" element={<About />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/new-post" element={<NewPost isUsername={isUsername}/>}  />

@@ -9,7 +9,7 @@ import {ThemeProvider} from "@mui/material";
 import {blue} from "@mui/material/colors";
 import theme from "./style/theme"
 
-function App() {
+function App({isUsername}) {
     const [posts, setPosts] = useState([])
 
     useEffect( () => {
@@ -27,7 +27,7 @@ function App() {
             <main>
                 <h1>This is my blog</h1>
                 <div className="content">
-                    <BlogPostWindow posts={posts}/>
+                    <BlogPostWindow posts={posts} isUserName={isUsername}/>
                     <div className="sideposts">
                         <LatestPosts/>
                         <PopularPosts/>

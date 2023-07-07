@@ -6,10 +6,20 @@
     border-radius: 4px;
 }
 
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 .title {
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 10px;
+}
+
+.post-button {
+    font-size: 16px;
 }
 
 .content {
