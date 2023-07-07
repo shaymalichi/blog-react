@@ -1,10 +1,26 @@
-import React from 'react';
 import './style/BlogPostWindow.css';
+import axios from "axios";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const BlogPostWindow = ({ posts, isUserName }) => {
+    const navigate = useNavigate();
+    const [deletedPostId, setDeletedPostId] = useState(null);
+
     const handleDeletePost = (postId) => {
-        // Logic for deleting the post goes here
-        console.log(`Delete post with ID: ${postId}`);
+        axios
+            .post('/delete', { id: postId })
+            .then(() => {
+                setDeletedPostId(postId)
+                posts = posts.filter((post) => post.id !== postId);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    };
+
+    const handleEditPost = (postId) => {
+        navigate(`/edit/${postId}`);
     };
 
     return (
@@ -14,7 +30,10 @@ const BlogPostWindow = ({ posts, isUserName }) => {
                     <div className="post-header">
                         <a href={`posts/${post.id}`} className="title">{post.title}</a>
                         {post.user_id === isUserName && (
-                            <button className="post-button" onClick={() => handleDeletePost(post.id)}>X</button>
+                            <div>
+                                <button className="post-button" onClick={() => handleEditPost(post.id)}>Edit</button>
+                                <button className="post-button" onClick={() => handleDeletePost(post.id)}>X</button>
+                            </div>
                         )}
                     </div>
                     <p className="content">{post.body}</p>

@@ -111,6 +111,39 @@ def add_post():
     return jsonify({'message': 'Post added successfully', 'new_city_id': new_city_id})
 
 
+@app.route('/delete', methods=['POST'])
+def delete_post():
+    data = request.get_json()
+    id = data['id']
+    print("i know this works!!!!!!!!!!!")
+    query = "DELETE FROM posts1 WHERE id = (%s);"
+    val = (id,)
+    cursor = db.cursor()
+    cursor.execute(query, val)
+    db.commit()
+    cursor.close()
+    return ""
+
+# UPDATE posts1 SET body = 'yossi' where id = 23;
+@app.route('/edit', methods=['POST'])
+def edit_post():
+    data = request.get_json()
+    post_id = data['postid']
+    content = data['content']
+    print(post_id)
+    print(content)
+    query = "UPDATE posts1 SET body = (%s) where id = (%s);"
+    val = (content, post_id)
+    cursor = db.cursor()
+    cursor.execute(query, val)
+    db.commit()
+    cursor.close()
+    return ""
+
+
+
+
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()

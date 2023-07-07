@@ -12,6 +12,7 @@ import { green } from "@mui/material/colors";
 import Post from "./post";
 import SignupForm from "./SignUpForm";
 import axios from 'axios';
+import EditPostComponent from './EditPostComponent';
 
 const theme = createTheme({
     status: {
@@ -48,6 +49,7 @@ function MainApp() {
                         <Route path="/login" element={<LoginForm setIsLoggedIn={setIsLoggedIn} setTheUsername={setTheUsername} />} />
                         <Route path="/posts/:id" element={<Post />} />
                         <Route path="/signup" element={<SignupForm />} />
+                        <Route path="/edit/:postId" element={<EditPostComponent />} />
                     </Routes>
                 </ThemeProvider>
             </BrowserRouter>

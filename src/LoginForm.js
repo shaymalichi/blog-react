@@ -15,7 +15,6 @@ function LoginForm({ setIsLoggedIn, setTheUsername}) {
         // Send an API request to the backend to check if the user and password exist
         axios.post('/login', { username, password })
             .then(response => {
-                // Handle the response from the backend
                 const data = response.data;
                 console.log(data)
                 if (data.success) {
