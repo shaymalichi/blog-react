@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-function Navbar({ isLoggedIn }) {
+function Navbar({ isLoggedIn, isUsername }) {
   if (!isLoggedIn) {
     return (
         <nav>
@@ -43,6 +43,9 @@ function Navbar({ isLoggedIn }) {
             </li>
             <li>
               <Link to="/new-post">New Post</Link>
+            </li>
+            <li>
+              <Link to="/">{isUsername}</Link>
             </li>
           </ul>
         </nav>
