@@ -3,14 +3,13 @@ import { Button, TextField, Grid, ThemeProvider } from "@mui/material";
 import axios from "axios";
 import theme from './style/theme';
 
-const NewPost = () => {
-    //const [posts, setPosts] = useState([]);
+const NewPost = ({isUsername}) => {
     const [postTitle, setPostTitle] = useState("");
     const [postContent, setPostContent] = useState("");
 
     const sendData = (data) => {
         const postData = {
-            user_id: "shay810",
+            user_id: isUsername,
             title: postTitle,
             body: data,
             created_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
@@ -22,7 +21,6 @@ const NewPost = () => {
                 console.log("this is my data");
                 console.log(res.data);
                 console.log("this is my end");
-                //setPosts(res.data);
             })
             .catch((error) => {
                 console.error(error);

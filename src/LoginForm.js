@@ -10,7 +10,6 @@ function LoginForm({ setIsLoggedIn, setTheUsername}) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loggedIn, setLoggedIn] = useState(false); //boolean value.
-    const [greeting, setGreeting] = useState("");
 
     const handleLogin = () => {
         // Send an API request to the backend to check if the user and password exist
@@ -25,7 +24,6 @@ function LoginForm({ setIsLoggedIn, setTheUsername}) {
                     setLoggedIn(true);
                     setIsLoggedIn(true)
                     setTheUsername(username)
-                    setGreeting(`Hello, ${username}!`);
                 } else {
                     // Login failed
                     console.log(data.success)

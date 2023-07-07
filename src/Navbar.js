@@ -15,12 +15,8 @@ function Navbar({ isLoggedIn, isUsername, handleLogout }) {
               <Link to="/contact">Contact Me</Link>
             </li>
             <li>
-              <Link to="/new-post">New Post</Link>
-            </li>
-            <li>
               <Link to="login">login</Link>
             </li>
-
             <li>
               <Link to="Signup">SignUp</Link>
             </li>

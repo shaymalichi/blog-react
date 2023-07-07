@@ -44,7 +44,7 @@ function MainApp() {
                         <Route path="/" element={<App />} />
                         <Route path="/about" element={<About />} />
                         <Route path="/contact" element={<Contact />} />
-                        <Route path="/new-post" element={<NewPost />} />
+                        <Route path="/new-post" element={<NewPost isUsername={isUsername}/>}  />
                         <Route path="/login" element={<LoginForm setIsLoggedIn={setIsLoggedIn} setTheUsername={setTheUsername} />} />
                         <Route path="/posts/:id" element={<Post />} />
                         <Route path="/signup" element={<SignupForm />} />
