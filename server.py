@@ -78,15 +78,21 @@ def get_post(post_id):
 @app.route('/signup', methods=['POST'])
 def add_user():
     data = request.get_json()
-    print(data)
+    cursor = db.cursor()
+    query = "SELECT username FROM users1 WHERE username = %s"
+    cursor.execute(query, (data['username'],))
+    existing_user = cursor.fetchone()
+    print("the answer is :", existing_user)
+    if existing_user:
+        cursor.close()
+        return jsonify(message="Username already exists"), 400
     query = "INSERT INTO users1 (username, created_at, password) VALUES (%s, %s, %s)"
     hashed = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
     print(hashed)
     values = (data['username'], data['created_at'], hashed)
-    cursor = db.cursor()
+
     cursor.execute(query, values)
     db.commit()
-    new_city_id = cursor.lastrowid
     cursor.close()
     return make_response()
 
