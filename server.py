@@ -56,6 +56,7 @@ def get_all_posts():
         data.append(record_dict)
     return json.dumps(data)
 
+
 @app.route('/posts/<int:post_id>', methods=['GET'])
 def get_post(post_id):
     query = "select user_id, id, title, body, created_at from posts1 where id = %s"
@@ -73,12 +74,6 @@ def get_post(post_id):
     else:
         return jsonify({'error': 'Post not found'})
 
-
-# TODO
-@app.route('/post', methods=['POST'])
-def get_city():
-    id = str(request.get_json()['id']) # query that gets the post by id
-    return get_all_posts()
 
 @app.route('/signup', methods=['POST'])
 def add_user():
@@ -124,6 +119,7 @@ def delete_post():
     cursor.close()
     return ""
 
+
 # UPDATE posts1 SET body = 'yossi' where id = 23;
 @app.route('/edit', methods=['POST'])
 def edit_post():
@@ -139,9 +135,6 @@ def edit_post():
     db.commit()
     cursor.close()
     return ""
-
-
-
 
 
 @app.route('/login', methods=['POST'])
@@ -177,6 +170,7 @@ def login():
         # User not found
         abort(401)
 
+
 @app.route('/logout', methods=['POST'])
 def logout():
     data = request.get_json()
@@ -191,11 +185,6 @@ def logout():
     db.commit()
     cursor.close()
     return resp
-
-
-
-
-
 
 
 if __name__ == "__main__":
