@@ -7,10 +7,11 @@ import Contact from './staticComponents/Contact';
 import NewPost from './NewPost';
 import Navbar from './Navbar';
 import LoginForm from "./LoginForm";
-import {createTheme, ThemeProvider} from "@mui/material";
-import {green} from "@mui/material/colors";
+import { createTheme, ThemeProvider } from "@mui/material";
+import { green } from "@mui/material/colors";
 import Post from "./post";
 import SignupForm from "./SignUpForm";
+import Textbox from "./Textbox";
 
 const theme = createTheme({
     status: {
@@ -18,26 +19,27 @@ const theme = createTheme({
     },
 });
 
-ReactDOM.render(
-    <React.StrictMode>
-      <BrowserRouter>
-          <ThemeProvider theme={theme}>
+function MainApp() {
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false); // Updated
 
+    return (
+        <React.StrictMode>
+            <BrowserRouter>
+                <ThemeProvider theme={theme}>
+                    <Navbar isLoggedIn={isLoggedIn} />
+                    <Routes>
+                        <Route path="/" element={<App />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/new-post" element={<NewPost />} />
+                        <Route path="/login" element={<LoginForm setIsLoggedIn={setIsLoggedIn} />} />
+                        <Route path="/posts/:id" element={<Post />} />
+                        <Route path="/signup" element={<SignupForm />} />
+                    </Routes>
+                </ThemeProvider>
+            </BrowserRouter>
+        </React.StrictMode>
+    );
+}
 
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/new-post" element={<NewPost />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/posts/:id" element={<Post />} />
-          <Route path="/signup" element={<SignupForm />} />
-
-        </Routes>
-          </ThemeProvider>
-      </BrowserRouter>
-    </React.StrictMode>,
-    document.getElementById('root')
-
-);
+ReactDOM.render(<MainApp />, document.getElementById('root'));

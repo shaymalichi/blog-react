@@ -5,7 +5,7 @@ import theme from './style/theme';
 import { blue } from "@mui/material/colors";
 import axios from 'axios';
 
-function LoginForm() {
+function LoginForm({ setIsLoggedIn }) {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -23,6 +23,7 @@ function LoginForm() {
                     // Login successful
                     console.log("Login successful");
                     setLoggedIn(true);
+                    setIsLoggedIn(true)
                     setGreeting(`Hello, ${username}!`);
                 } else {
                     // Login failed
@@ -40,6 +41,7 @@ function LoginForm() {
         // Send an API request to the backend to clear the session
         axios.post('/logout', {username} )
             .then(() => {
+                setIsLoggedIn(false);
                 setLoggedIn(false);
                 setUsername("");
                 setPassword("");
