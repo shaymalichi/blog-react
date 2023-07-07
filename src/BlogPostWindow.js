@@ -23,12 +23,25 @@ const BlogPostWindow = ({ posts, isUserName }) => {
         navigate(`/edit/${postId}`);
     };
 
+    const handleViewPost = (postId) => {
+        navigate(`/posts/${postId}`);
+    };
+
     return (
         <div>
             {posts.map((post) => (
                 <div className="blog-post-window" key={post.id}>
                     <div className="post-header">
-                        <a href={`posts/${post.id}`} className="title">{post.title}</a>
+                        <a
+                            href={`/posts/${post.id}`}
+                            className="title"
+                            onClick={(event) => {
+                                event.preventDefault();
+                                handleViewPost(post.id);
+                            }}
+                        >
+                            {post.title}
+                        </a>
                         {post.user_id === isUserName && (
                             <div>
                                 <button className="post-button" onClick={() => handleEditPost(post.id)}>Edit</button>
