@@ -29,6 +29,7 @@ function MainApp() {
             .post('/logout', { username: isUsername })
             .then(() => {
                 setIsLoggedIn(false);
+                setTheUsername(null)
             })
             .catch(error => {
                 console.error('Error occurred during logout:', error);

@@ -8,6 +8,11 @@ const Post = () => {
     const [post, setPost] = useState({});
 
     useEffect(() => {
+        axios.get('/sessions')
+    })
+
+
+    useEffect(() => {
         const fetchPost = async () => {
             try {
                 const response = await axios.get(`/posts/${id}`);
