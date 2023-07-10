@@ -192,6 +192,35 @@ def logout():
     cursor.close()
     return resp
 
+@app.route('/sessions', methods=['GET'])
+def session_check():
+    query = "select username from sessions;"
+    cursor = db.cursor()
+    cursor.execute(query)
+    username = cursor.fetchone()
+    print("the username i got: ", username)
+    if username:
+        print("what im returning username[0] is: ", username[0])
+        return username[0]
+    else:
+        return ""
+
+@app.route('/comments', methods=['POST'])
+def comment():
+    data = request.get_json()
+    username_that_commented = data['user']
+    post_id = data['postid']
+    content = data['content']
+    query = "INSERT INTO comments (user_id, body, post_id) VALUES (%s, %s, %s);"
+    query_values = (username_that_commented, content, post_id)
+    cursor = db.cursor()
+    y = cursor.execute(query, query_values)
+    db.commit()
+    print(y)
+    print("something happend?")
+    return ""
+
+
 
 if __name__ == "__main__":
     app.secret_key = '123'

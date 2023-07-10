@@ -13,6 +13,7 @@ import Post from "./post";
 import SignupForm from "./SignUpForm";
 import axios from 'axios';
 import EditPostComponent from './EditPostComponent';
+import CommentOnPost from "./CommentOnPost";
 
 const theme = createTheme({
     status: {
@@ -51,6 +52,7 @@ function MainApp() {
                         <Route path="/posts/:id" element={<Post />} />
                         <Route path="/signup" element={<SignupForm />} />
                         <Route path="/edit/:postId" element={<EditPostComponent />} />
+                        <Route path="/comment/:postId" element={<CommentOnPost isUsername={isUsername}/>} />
                     </Routes>
                 </ThemeProvider>
             </BrowserRouter>

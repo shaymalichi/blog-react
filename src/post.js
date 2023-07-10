@@ -8,20 +8,13 @@ const Post = () => {
     const [post, setPost] = useState({});
 
     useEffect(() => {
-        axios.get('/sessions')
-    })
-
-
-    useEffect(() => {
-        const fetchPost = async () => {
-            try {
-                const response = await axios.get(`/posts/${id}`);
+        axios.get(`/posts/${id}`)
+            .then(response => {
                 setPost(response.data);
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error('Error occurred while fetching post:', error);
-            }
-        };
-        fetchPost();
+            });
     }, [id]);
 
     return (
