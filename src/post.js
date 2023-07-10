@@ -27,7 +27,7 @@ const Post = () => {
     return (
         <div>
             <h2>Post Details</h2>
-            <BlogPostWindow posts={[post]} isUserName={'None'} />
+            <BlogPostWindow posts={[post]} isUserName={""} />
         </div>
     );
 };

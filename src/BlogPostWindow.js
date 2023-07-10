@@ -27,6 +27,11 @@ const BlogPostWindow = ({ posts, isUserName }) => {
         navigate(`/posts/${postId}`);
     };
 
+    const handleCustomAction = (postId) => {
+        navigate(`/comment/${postId}`)
+    }
+    console.log("this username value is :", isUserName)
+    console.log("the type of isusername is: " ,typeof isUserName)
     return (
         <div>
             {posts.map((post) => (
@@ -47,6 +52,9 @@ const BlogPostWindow = ({ posts, isUserName }) => {
                                 <button className="post-button" onClick={() => handleEditPost(post.id)}>Edit</button>
                                 <button className="post-button" onClick={() => handleDeletePost(post.id)}>X</button>
                             </div>
+                        )}
+                        {isUserName !== "" && (
+                            <button className="post-button" onClick={() => handleCustomAction(post.id)}>Comment</button>
                         )}
                     </div>
                     <p className="content">{post.body}</p>
