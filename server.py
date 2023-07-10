@@ -56,6 +56,23 @@ def get_all_posts():
         data.append(record_dict)
     return json.dumps(data)
 
+@app.route('/comments/<int:post_id>', methods=['GET'])
+def get_comments(post_id):
+    query = "select * from comments where post_id = %s"
+    print("after query written!")
+    values = (post_id,)
+    cursor = db.cursor()
+    cursor.execute(query, values)
+    records = cursor.fetchall()
+    print("the records: ", records)
+    cursor.close()
+    header = ['user_id', 'body', 'post_id']
+    data = []
+    for r in records:
+        record_dict = dict(zip(header, r))
+        data.append(record_dict)
+    return json.dumps(data)
+
 
 @app.route('/posts/<int:post_id>', methods=['GET'])
 def get_post(post_id):
@@ -206,7 +223,7 @@ def session_check():
         return ""
 
 @app.route('/comments', methods=['POST'])
-def comment():
+def add_comment():
     data = request.get_json()
     username_that_commented = data['user']
     post_id = data['postid']
