@@ -3,16 +3,15 @@ import axios from "axios";
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const BlogPostWindow = ({ posts, isUserName }) => {
+const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
     const navigate = useNavigate();
-    const [deletedPostId, setDeletedPostId] = useState(null);
 
     const handleDeletePost = (postId) => {
         axios
             .post('/delete', { id: postId })
             .then(() => {
-                setDeletedPostId(postId)
-                posts = posts.filter((post) => post.id !== postId);
+                const updatedPosts = posts.filter((post) => post.id !== postId);
+                onDeletePost(updatedPosts); // Call the callback function
             })
             .catch(error => {
                 console.error(error);

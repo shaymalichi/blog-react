@@ -42,7 +42,6 @@ def manage_posts():
 
 
 def get_all_posts():
-    print('test')
     query = "select * from posts1"
     cursor = db.cursor()
     cursor.execute(query)
@@ -59,12 +58,10 @@ def get_all_posts():
 @app.route('/comments/<int:post_id>', methods=['GET'])
 def get_comments(post_id):
     query = "select * from comments where post_id = %s"
-    print("after query written!")
     values = (post_id,)
     cursor = db.cursor()
     cursor.execute(query, values)
     records = cursor.fetchall()
-    print("the records: ", records)
     cursor.close()
     header = ['user_id', 'body', 'post_id']
     data = []
@@ -99,13 +96,11 @@ def add_user():
     query = "SELECT username FROM users1 WHERE username = %s"
     cursor.execute(query, (data['username'],))
     existing_user = cursor.fetchone()
-    print("the answer is :", existing_user)
     if existing_user:
         cursor.close()
         return jsonify(message="Username already exists"), 400
     query = "INSERT INTO users1 (username, created_at, password) VALUES (%s, %s, %s)"
     hashed = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
-    print(hashed)
     values = (data['username'], data['created_at'], hashed)
 
     cursor.execute(query, values)
@@ -133,7 +128,6 @@ def add_post():
 def delete_post():
     data = request.get_json()
     id = data['id']
-    print("i know this works!!!!!!!!!!!")
     query = "DELETE FROM posts1 WHERE id = (%s);"
     val = (id,)
     cursor = db.cursor()
@@ -149,8 +143,6 @@ def edit_post():
     data = request.get_json()
     post_id = data['postid']
     content = data['content']
-    print(post_id)
-    print(content)
     query = "UPDATE posts1 SET body = (%s) where id = (%s);"
     val = (content, post_id)
     cursor = db.cursor()
@@ -215,7 +207,6 @@ def session_check():
     cursor = db.cursor()
     cursor.execute(query)
     username = cursor.fetchone()
-    print("the username i got: ", username)
     if username:
         print("what im returning username[0] is: ", username[0])
         return username[0]
@@ -233,8 +224,6 @@ def add_comment():
     cursor = db.cursor()
     y = cursor.execute(query, query_values)
     db.commit()
-    print(y)
-    print("something happend?")
     return ""
 
 

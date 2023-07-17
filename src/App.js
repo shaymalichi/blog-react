@@ -27,7 +27,7 @@ function App({isUsername}) {
             <main>
                 <h1>This is my blog</h1>
                 <div className="content">
-                    <BlogPostWindow posts={posts} isUserName={isUsername}/>
+                    <BlogPostWindow posts={posts} isUserName={isUsername} onDeletePost={setPosts} />
                     <div className="sideposts">
                         <LatestPosts/>
                         <PopularPosts/>
