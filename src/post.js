@@ -10,23 +10,21 @@ const Post = () => {
     const [comments, setComments] = useState([]);
 
     useEffect(() => {
-        axios
-            .get(`/posts/${id}`)
-            .then((response) => {
-                setPost(response.data);
-            })
-            .catch((error) => {
-                console.error("Error occurred while fetching post:", error);
-            });
-        axios
-            .get(`/comments/${id}`)
-            .then((response) => {
-                setComments(response.data);
-            })
-            .catch((error) => {
-                console.error("Error occurred while fetching comments:", error);
-            });
+        const fetchData = async () => {
+            try {
+                const postResponse = await axios.get(`/posts/${id}`);
+                setPost(postResponse.data);
+
+                const commentsResponse = await axios.get(`/comments/${id}`);
+                setComments(commentsResponse.data);
+            } catch (error) {
+                console.error("Error occurred while fetching data:", error);
+            }
+        };
+
+        fetchData().then(r => {});
     }, [id]);
+
 
     return (
         <div>
