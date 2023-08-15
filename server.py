@@ -42,7 +42,7 @@ def manage_posts():
 
 
 def get_all_posts():
-    query = "select * from posts1"
+    query = "SELECT user_id, id, title, body, created_at from posts1"
     cursor = db.cursor()
     cursor.execute(query)
     records = cursor.fetchall()
