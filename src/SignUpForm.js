@@ -10,25 +10,20 @@ function SignupForm() {
         const password = event.target.password.value;
         const createdTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-        // Create an object with the username, password, and created_at
         const data = {
             username: username,
             password: password,
             created_at: createdTime
         };
 
-        // Make a POST request to your backend API endpoint
         axios.post('/signup', data)
             .then(response => {
-                // Handle the response from the backend if needed
                 console.log(response.data);
             })
             .catch(error => {
-                // Handle any errors that occurred during the request
                 console.error(error);
             });
 
-        // Perform signup logic here with the username, password, and createdTime values
         console.log("Signup:", username, password, createdTime);
     };
 

@@ -9,22 +9,19 @@ function LoginForm({ setIsLoggedIn, setTheUsername}) {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [loggedIn, setLoggedIn] = useState(false); //boolean value.
+    const [loggedIn, setLoggedIn] = useState(false);
 
     const handleLogin = () => {
-        // Send an API request to the backend to check if the user and password exist
         axios.post('/login', { username, password })
             .then(response => {
                 const data = response.data;
                 console.log(data)
                 if (data.success) {
-                    // Login successful
                     console.log("Login successful");
                     setLoggedIn(true);
                     setIsLoggedIn(true)
                     setTheUsername(username)
                 } else {
-                    // Login failed
                     console.log(data.success)
                     console.log("it seems its null: data.success")
                     console.log("Login failed");

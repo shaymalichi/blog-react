@@ -22,7 +22,7 @@ const theme = createTheme({
 });
 
 function MainApp() {
-    const [isLoggedIn, setIsLoggedIn] = React.useState(false); // Updated
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
     const [isUsername, setTheUsername] = React.useState("");
 
     const handleLogout = () => {
