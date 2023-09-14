@@ -57,7 +57,7 @@ def get_all_posts():
 
 @app.route('/comments/<int:post_id>', methods=['GET'])
 def get_comments(post_id):
-    query = "select * from comments where post_id = %s"
+    query = "select user_id, body, post_id from comments where post_id = %s"
     values = (post_id,)
     cursor = db.cursor()
     cursor.execute(query, values)
