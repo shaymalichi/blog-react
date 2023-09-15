@@ -2,6 +2,7 @@
 # pip3 install flask_cors
 import uuid
 from datetime import datetime
+from settings import password
 
 from flask import Flask, request, make_response, abort, session
 import mysql.connector as mysql
@@ -13,7 +14,7 @@ import bcrypt
 db = mysql.connect(
     host="localhost",
     user="root",
-    passwd="12345678",
+    passwd=password,
     database="new_schema")
 
 
