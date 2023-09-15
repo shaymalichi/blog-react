@@ -2,23 +2,19 @@
 # pip3 install flask_cors
 import uuid
 from datetime import datetime
+
+from flask import Flask, request, make_response, abort, session
 import mysql.connector as mysql
 import json
-import mysql.connector.pooling
-import bcrypt
-#import mysql.connector as mysql
-from flask import Flask, request, make_response, abort, session
-# from flask_cors import CORS
+#from flask_cors import CORS
 from flask import jsonify
+import bcrypt
 
-db = mysql.connector.pooling.MySQLConnectionPool(
-    pool_name="my_pool",
-    pool_size=5,
+db = mysql.connect(
     host="localhost",
     user="root",
     passwd="12345678",
-    database="new_schema"
-)
+    database="new_schema")
 
 
 # db = mysql.connect( # the aws database
@@ -47,12 +43,10 @@ def manage_posts():
 
 def get_all_posts():
     query = "SELECT user_id, id, title, body, created_at from posts1"
-    connection = db.get_connection()
-    cursor = connection.cursor()
+    cursor = db.cursor()
     cursor.execute(query)
     records = cursor.fetchall()
     cursor.close()
-    connection.close()
     header = ['user_id', 'id', 'title', 'body', 'created_at']
     data = []
     for r in records:
@@ -65,12 +59,10 @@ def get_all_posts():
 def get_comments(post_id):
     query = "select user_id, body, post_id from comments where post_id = %s"
     values = (post_id,)
-    connection = db.get_connection()
-    cursor = connection.cursor()
+    cursor = db.cursor()
     cursor.execute(query, values)
     records = cursor.fetchall()
     cursor.close()
-    connection.close()
     header = ['user_id', 'body', 'post_id']
     data = []
     for r in records:
@@ -83,12 +75,10 @@ def get_comments(post_id):
 def get_post(post_id):
     query = "select user_id, id, title, body, created_at from posts1 where id = %s"
     values = (post_id,)
-    connection = db.get_connection()
-    cursor = connection.cursor()
+    cursor = db.cursor()
     cursor.execute(query, values)
     record = cursor.fetchone()
     cursor.close()
-    connection.close()
 
     if record:
         header = ['user_id', 'id', 'title', 'body', 'created_at']
@@ -102,14 +92,12 @@ def get_post(post_id):
 @app.route('/signup', methods=['POST'])
 def add_user():
     data = request.get_json()
-    connection = db.get_connection()
-    cursor = connection.cursor()
+    cursor = db.cursor()
     query = "SELECT username FROM users1 WHERE username = %s"
     cursor.execute(query, (data['username'],))
     existing_user = cursor.fetchone()
     if existing_user:
         cursor.close()
-        connection.close()
         return jsonify(message="Username already exists"), 400
     query = "INSERT INTO users1 (username, created_at, password) VALUES (%s, %s, %s)"
     hashed = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
@@ -118,7 +106,6 @@ def add_user():
     cursor.execute(query, values)
     db.commit()
     cursor.close()
-    connection.close()
     return make_response()
 
 
@@ -127,13 +114,11 @@ def add_post():
     data = request.get_json()
     query = "INSERT INTO posts1 (user_id, title, body, created_at) VALUES (%s, %s, %s, %s)"
     values = (data['user_id'], data['title'], data['body'], data['created_at'])
-    connection = db.get_connection()
-    cursor = connection.cursor()
+    cursor = db.cursor()
     cursor.execute(query, values)
     db.commit()
     new_city_id = cursor.lastrowid
     cursor.close()
-    connection.close()
 
     # Return a response indicating the success of the operation
     return jsonify({'message': 'Post added successfully', 'new_city_id': new_city_id})
@@ -145,12 +130,10 @@ def delete_post():
     id = data['id']
     query = "DELETE FROM posts1 WHERE id = (%s);"
     val = (id,)
-    connection = db.get_connection()
-    cursor = connection.cursor()
+    cursor = db.cursor()
     cursor.execute(query, val)
     db.commit()
     cursor.close()
-    connection.close()
     return ""
 
 
@@ -162,12 +145,10 @@ def edit_post():
     content = data['content']
     query = "UPDATE posts1 SET body = (%s) where id = (%s);"
     val = (content, post_id)
-    connection = db.get_connection()
-    cursor = connection.cursor()
+    cursor = db.cursor()
     cursor.execute(query, val)
     db.commit()
     cursor.close()
-    connection.close()
     return ""
 
 
@@ -178,12 +159,10 @@ def login():
     password = data['password']
     query_for_check_password = "SELECT username, password FROM users1 WHERE username = %s"
     values_for_check_password = (username,)
-    connection = db.get_connection()
-    cursor = connection.cursor()
+    cursor = db.cursor()
     cursor.execute(query_for_check_password, values_for_check_password)
     record = cursor.fetchone()
     cursor.close()
-    connection.close()
 
     if record:
         hashed_password = record[1]
@@ -192,12 +171,10 @@ def login():
             session_id = str(uuid.uuid4())
             query_for_sessions = "INSERT INTO sessions (username, session_id) VALUES (%s, %s)"
             values_for_sessions = (username, session_id)
-            connection = db.get_connection()
-            cursor = connection.cursor()
+            cursor = db.cursor()
             cursor.execute(query_for_sessions, values_for_sessions)
             db.commit()
             cursor.close()
-            connection.close()
             resp = jsonify({'success': True})
             resp.set_cookie("session_id", session_id)
             return resp
@@ -218,19 +195,16 @@ def logout():
     resp.set_cookie("session_id", "", expires=datetime.now())
     query = "DELETE FROM sessions WHERE username = (%s);"
     value = (username,)
-    connection = db.get_connection()
-    cursor = connection.cursor()
+    cursor = db.cursor()
     cursor.execute(query, value)
     db.commit()
     cursor.close()
-    connection.close()
     return resp
 
 @app.route('/sessions', methods=['GET'])
 def session_check():
     query = "select username from sessions;"
-    connection = db.get_connection()
-    cursor = connection.cursor()
+    cursor = db.cursor()
     cursor.execute(query)
     username = cursor.fetchone()
     if username:
@@ -247,8 +221,7 @@ def add_comment():
     content = data['content']
     query = "INSERT INTO comments (user_id, body, post_id) VALUES (%s, %s, %s);"
     query_values = (username_that_commented, content, post_id)
-    connection = db.get_connection()
-    cursor = connection.cursor()
+    cursor = db.cursor()
     y = cursor.execute(query, query_values)
     db.commit()
     return ""
@@ -258,5 +231,4 @@ def add_comment():
 if __name__ == "__main__":
     app.secret_key = '123'
     app.run()
-
 
