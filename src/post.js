@@ -14,7 +14,6 @@ const Post = () => {
             try {
                 const postResponse = await axios.get(`/posts/${id}`);
                 setPost(postResponse.data);
-
                 const commentsResponse = await axios.get(`/posts/${id}/comments`);
                 setComments(commentsResponse.data);
             } catch (error) {
