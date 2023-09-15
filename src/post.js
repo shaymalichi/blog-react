@@ -15,7 +15,7 @@ const Post = () => {
                 const postResponse = await axios.get(`/posts/${id}`);
                 setPost(postResponse.data);
 
-                const commentsResponse = await axios.get(`/comments/${id}`);
+                const commentsResponse = await axios.get(`/posts/${id}/comments`);
                 setComments(commentsResponse.data);
             } catch (error) {
                 console.error("Error occurred while fetching data:", error);

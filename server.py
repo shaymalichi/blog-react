@@ -55,7 +55,7 @@ def get_all_posts():
         data.append(record_dict)
     return json.dumps(data)
 
-@app.route('/comments/<int:post_id>', methods=['GET'])
+@app.route('/posts/<int:post_id>/comments', methods=['GET'])
 def get_comments(post_id):
     query = "select user_id, body, post_id from comments where post_id = %s"
     values = (post_id,)

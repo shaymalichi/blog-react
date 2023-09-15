@@ -1,5 +1,5 @@
 import './style/BlogPostWindow.css';
-import axios from "axios";
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,15 +7,19 @@ const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
     const navigate = useNavigate();
 
     const handleDeletePost = (postId) => {
-        axios
-            .post('/delete', { id: postId })
-            .then(() => {
-                const updatedPosts = posts.filter((post) => post.id !== postId);
-                onDeletePost(updatedPosts); // Call the callback function
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        const isConfirmed = window.confirm('Are you sure you want to delete this post?');
+
+        if (isConfirmed) {
+            axios
+                .post('/delete', { id: postId })
+                .then(() => {
+                    const updatedPosts = posts.filter((post) => post.id !== postId);
+                    onDeletePost(updatedPosts); // Call the callback function
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
     };
 
     const handleEditPost = (postId) => {
@@ -28,9 +32,8 @@ const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
 
     const handleCustomAction = (postId) => {
         navigate(`/comment/${postId}`)
-    }
-    console.log("this username value is :", isUserName)
-    console.log("the type of isusername is: " ,typeof isUserName)
+    };
+
     return (
         <div>
             {posts.map((post) => (
@@ -49,7 +52,7 @@ const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
                         {post.user_id === isUserName && (
                             <div>
                                 <button className="post-button" onClick={() => handleEditPost(post.id)}>Edit</button>
-                                <button className="post-button" onClick={() => handleDeletePost(post.id)}>X</button>
+                                <button className="post-button" onClick={() => handleDeletePost(post.id)}>Delete</button>
                             </div>
                         )}
                         {isUserName !== "" && (

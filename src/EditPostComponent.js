@@ -9,14 +9,18 @@ const EditPostComponent = () => {
     const navigate = useNavigate();
     const [postContent, setPostContent] = useState('');
 
-    const handleSave = (postContent) => {
-        axios
-            .post('/edit', { postid: postId, content: postContent })
-            .then(() => {})
-            .catch(error => {
-                console.error(error);
-            });
-        navigate(-1);
+    const handleSave = () => {
+        const isConfirmed = window.confirm('Are you sure you want to save the edit?');
+
+        if (isConfirmed) {
+            axios
+                .post('/edit', { postid: postId, content: postContent })
+                .then(() => {})
+                .catch(error => {
+                    console.error(error);
+                });
+            navigate(-1);
+        }
     };
 
     const handleCancel = () => {
@@ -32,7 +36,7 @@ const EditPostComponent = () => {
                 placeholder="Enter your post content"
                 style={{ width: '100%', marginBottom: '16px' }}
             />
-            <Button variant="contained" color="primary" onClick={() => handleSave(postContent)} style={{ marginRight: '8px' }}>
+            <Button variant="contained" color="primary" onClick={handleSave} style={{ marginRight: '8px' }}>
                 Save
             </Button>
             <Button variant="outlined" color="primary" onClick={handleCancel}>
