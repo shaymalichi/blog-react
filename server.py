@@ -129,8 +129,9 @@ def add_post():
 def delete_post():
     data = request.get_json()
     id = data['id']
-    query = "DELETE FROM posts1 WHERE id = (%s);"
-    val = (id,)
+    user = data['user']
+    query = "DELETE FROM posts1 WHERE id = (%s) AND user_id = (%s) ;"
+    val = (id, user, )
     cursor = db.cursor()
     cursor.execute(query, val)
     db.commit()
@@ -138,14 +139,13 @@ def delete_post():
     return ""
 
 
-# UPDATE posts1 SET body = 'yossi' where id = 23;
 @app.route('/edit', methods=['POST'])
 def edit_post():
     data = request.get_json()
     post_id = data['postid']
     content = data['content']
     user = data['user']
-    query = "UPDATE posts1 SET body = (%s) where id = (%s) and user_id = (%s);"
+    query = "UPDATE posts1 SET body = (%s) where id = (%s) AND user_id = (%s);"
     val = (content, post_id, user)
     cursor = db.cursor()
     cursor.execute(query, val)
