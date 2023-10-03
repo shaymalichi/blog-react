@@ -4,7 +4,7 @@ import { Button, TextareaAutosize } from '@mui/material';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 
-const EditPostComponent = () => {
+const EditPostComponent = ({isUsername}) => {
     const { postId } = useParams();
     const navigate = useNavigate();
     const [postContent, setPostContent] = useState('');
@@ -14,7 +14,7 @@ const EditPostComponent = () => {
 
         if (isConfirmed) {
             axios
-                .post('/edit', { postid: postId, content: postContent })
+                .post('/edit', { postid: postId, content: postContent, user: isUsername })
                 .then(() => {})
                 .catch(error => {
                     console.error(error);

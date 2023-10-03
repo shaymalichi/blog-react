@@ -144,8 +144,9 @@ def edit_post():
     data = request.get_json()
     post_id = data['postid']
     content = data['content']
-    query = "UPDATE posts1 SET body = (%s) where id = (%s);"
-    val = (content, post_id)
+    user = data['user']
+    query = "UPDATE posts1 SET body = (%s) where id = (%s) and user_id = (%s);"
+    val = (content, post_id, user)
     cursor = db.cursor()
     cursor.execute(query, val)
     db.commit()

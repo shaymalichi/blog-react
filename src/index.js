@@ -51,7 +51,7 @@ function MainApp() {
                         <Route path="/login" element={<LoginForm setIsLoggedIn={setIsLoggedIn} setTheUsername={setTheUsername} />} />
                         <Route path="/posts/:id" element={<Post />} />
                         <Route path="/signup" element={<SignupForm />} />
-                        <Route path="/edit/:postId" element={<EditPostComponent />} />
+                        <Route path="/edit/:postId" element={<EditPostComponent isUsername={isUsername}/>} />
                         <Route path="/comment/:postId" element={<CommentOnPost isUsername={isUsername}/>} />
                     </Routes>
                 </ThemeProvider>
