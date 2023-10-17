@@ -11,7 +11,7 @@ const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
 
         if (isConfirmed) {
             axios
-                .post('/delete', { id: postId, user: isUserName })
+                .delete(`/posts/${postId}`, { data: {id: postId, user: isUserName }})
                 .then(() => {
                     const updatedPosts = posts.filter((post) => post.id !== postId);
                     onDeletePost(updatedPosts); // Call the callback function

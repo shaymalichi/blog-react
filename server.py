@@ -81,7 +81,14 @@ def get_comments(post_id):
     return json.dumps(data)
 
 
-@app.route('/posts/<int:post_id>', methods=['GET'])
+@app.route('/posts/<int:post_id>', methods=['GET', 'DELETE'])
+def handle_posts_id(post_id):
+    if request.method == 'GET':
+        return get_post(post_id)
+    else:
+        return delete_post(post_id)
+
+
 def get_post(post_id):
     db = pool.get_connection()
     query = "select user_id, id, title, body, created_at from posts1 where id = %s"
@@ -124,7 +131,7 @@ def add_user():
     return make_response()
 
 
-@app.route('/new-post', methods=['POST'])
+#@app.route('/new-post', methods=['POST'])
 def add_post():
     db = pool.get_connection()
     data = request.get_json()
@@ -141,20 +148,31 @@ def add_post():
     return jsonify({'message': 'Post added successfully', 'new_city_id': new_city_id})
 
 
-@app.route('/delete', methods=['POST'])
-def delete_post():
+def delete_post(post_id):
     db = pool.get_connection()
-    data = request.get_json()
-    id = data['id']
-    user = data['user']
+    user = session_check()
     query = "DELETE FROM posts1 WHERE id = (%s) AND user_id = (%s) ;"
-    val = (id, user, )
+    val = (post_id, user )
     cursor = db.cursor()
     cursor.execute(query, val)
     db.commit()
     cursor.close()
     db.close()
     return ""
+
+def get_user_id():
+    username = session_check()
+    if username == "":
+        abort(401, "you cannot delete")
+    db = pool.get_connection()
+    query = "SELECT id FROM users1 WHERE username = %s"
+    values = (username, )
+    cursor = db.cursor()
+    cursor.execute(query, values)
+    user_id = cursor.fetchone()
+    cursor.close()
+    db.close()
+    return user_id[0]
 
 
 @app.route('/edit', methods=['POST'])
@@ -163,7 +181,7 @@ def edit_post():
     data = request.get_json()
     post_id = data['postid']
     content = data['content']
-    user = data['user']
+    user = session_check()
     query = "UPDATE posts1 SET body = (%s) where id = (%s) AND user_id = (%s);"
     val = (content, post_id, user)
     cursor = db.cursor()
@@ -232,9 +250,13 @@ def logout():
 @app.route('/sessions', methods=['GET'])
 def session_check():
     db = pool.get_connection()
-    query = "select username from sessions;"
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        return ""
+    query = "select username from sessions WHERE session_id = %s"
+    values = (session_id, )
     cursor = db.cursor()
-    cursor.execute(query)
+    cursor.execute(query, values)
     username = cursor.fetchone()
     cursor.close()
     db.close()
@@ -242,7 +264,7 @@ def session_check():
         print("what im returning username[0] is: ", username[0])
         return username[0]
     else:
-        return ""
+        ""
 
 @app.route('/comments', methods=['POST'])
 def add_comment():

@@ -16,7 +16,7 @@ const NewPost = ({isUsername}) => {
         };
 
         axios
-            .post('/new-post', postData)
+            .post('/posts', postData)
             .then((res) => {
                 console.log("this is my data");
                 console.log(res.data);
