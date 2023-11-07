@@ -14,7 +14,7 @@ const EditPostComponent = ({isUsername}) => {
 
         if (isConfirmed) {
             axios
-                .post('/edit', { postid: postId, content: postContent, user: isUsername })
+                .post(`/posts/${postId}`, { postid: postId, content: postContent, user: isUsername })
                 .then(() => {})
                 .catch(error => {
                     console.error(error);

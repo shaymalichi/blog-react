@@ -81,12 +81,15 @@ def get_comments(post_id):
     return json.dumps(data)
 
 
-@app.route('/posts/<int:post_id>', methods=['GET', 'DELETE'])
+@app.route('/posts/<int:post_id>', methods=['GET', 'DELETE', 'POST'])
 def handle_posts_id(post_id):
     if request.method == 'GET':
         return get_post(post_id)
+    elif request.method == 'POST':
+        return edit_post()
     else:
         return delete_post(post_id)
+
 
 
 def get_post(post_id):
@@ -175,7 +178,7 @@ def get_user_id():
     return user_id[0]
 
 
-@app.route('/edit', methods=['POST'])
+#@app.route('/edit', methods=['POST'])
 def edit_post():
     db = pool.get_connection()
     data = request.get_json()
