@@ -139,7 +139,8 @@ def add_post():
     db = pool.get_connection()
     data = request.get_json()
     query = "INSERT INTO posts1 (user_id, title, body, created_at) VALUES (%s, %s, %s, %s)"
-    values = (data['user_id'], data['title'], data['body'], data['created_at'])
+    user = session_check()
+    values = (user, data['title'], data['body'], data['created_at'])
     cursor = db.cursor()
     cursor.execute(query, values)
     db.commit()
@@ -236,8 +237,7 @@ def login():
 @app.route('/logout', methods=['POST'])
 def logout():
     db = pool.get_connection()
-    data = request.get_json()
-    username = data['username']
+    username = session_check()
     session.clear()
     resp = make_response()
     resp.set_cookie("session_id", "", expires=datetime.now())
@@ -273,7 +273,7 @@ def session_check():
 def add_comment():
     db = pool.get_connection()
     data = request.get_json()
-    username_that_commented = data['user']
+    username_that_commented = session_check()
     post_id = data['postid']
     content = data['content']
     query = "INSERT INTO comments (user_id, body, post_id) VALUES (%s, %s, %s);"
