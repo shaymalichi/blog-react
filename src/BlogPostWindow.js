@@ -1,10 +1,11 @@
 import './style/BlogPostWindow.css';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleDeletePost = (postId) => {
         const isConfirmed = window.confirm('Are you sure you want to delete this post?');
@@ -31,7 +32,7 @@ const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
     };
 
     const handleCustomAction = (postId) => {
-        navigate(`/comment/${postId}`)
+        navigate(`/comment/${postId}`);
     };
 
     return (
@@ -59,7 +60,7 @@ const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
                             <button className="post-button" onClick={() => handleCustomAction(post.id)}>Comment</button>
                         )}
                     </div>
-                    <p className="content">{post.body}</p>
+                    {location.pathname === `/posts/${post.id}` && <p className="content">{post.body}</p>}
                     <div className="footer">
                         <span className="published-date">{post.created_at}</span>
                         <span className="username">{post.user_id}</span>
