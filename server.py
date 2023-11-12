@@ -156,13 +156,21 @@ def delete_post(post_id):
     db = pool.get_connection()
     user = session_check()
     query = "DELETE FROM posts1 WHERE id = (%s) AND user_id = (%s) ;"
-    val = (post_id, user )
+    val = (post_id, user)
     cursor = db.cursor()
-    cursor.execute(query, val)
-    db.commit()
-    cursor.close()
-    db.close()
-    return ""
+
+    try:
+        cursor.execute(query, val)
+        if cursor.rowcount == 0:
+            raise Exception("Post not found or you don't have permission to delete it.")
+        db.commit()
+        return "Post deleted successfully"
+    except Exception as e:
+        db.rollback()
+        return f"Error deleting post: {str(e)}"
+    finally:
+        cursor.close()
+        db.close()
 
 def get_user_id():
     username = session_check()
@@ -179,21 +187,28 @@ def get_user_id():
     return user_id[0]
 
 
-#@app.route('/edit', methods=['POST'])
 def edit_post():
     db = pool.get_connection()
     data = request.get_json()
     post_id = data['postid']
     content = data['content']
     user = session_check()
-    query = "UPDATE posts1 SET body = (%s) where id = (%s) AND user_id = (%s);"
+    query = "UPDATE posts1 SET body = (%s) WHERE id = (%s) AND user_id = (%s);"
     val = (content, post_id, user)
     cursor = db.cursor()
-    cursor.execute(query, val)
-    db.commit()
-    cursor.close()
-    db.close()
-    return ""
+
+    try:
+        cursor.execute(query, val)
+        if cursor.rowcount == 0:
+            raise Exception("Post not found or you don't have permission to edit it.")
+        db.commit()
+        return "Post edited successfully"
+    except Exception as e:
+        db.rollback()
+        return f"Error editing post: {str(e)}"
+    finally:
+        cursor.close()
+        db.close()
 
 
 @app.route('/login', methods=['POST'])
