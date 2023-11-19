@@ -274,6 +274,7 @@ def session_check():
     db = pool.get_connection()
     session_id = request.cookies.get("session_id")
     if not session_id:
+        db.close()
         return ""
     query = "select username from sessions WHERE session_id = %s"
     values = (session_id, )
