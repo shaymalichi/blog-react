@@ -23,11 +23,15 @@ pool = mysql.pooling.MySQLConnectionPool(
 )
 
 
-# db = mysql.connect( # the aws database
+# pool = mysql.pooling.MySQLConnectionPool( # the aws database
 #     host="shay-amazing-batabase.cbrdyb6rueag.eu-central-1.rds.amazonaws.com",
 #     user="admin",
-#     passwd="Shay12345678",
-#     database="new_schema")
+#     passwd=password,
+#     database="new_schema",
+#     buffered=True,
+#     pool_size=5,
+#     pool_name="blos_shay"
+#     )
 
 
 app = Flask(__name__,
