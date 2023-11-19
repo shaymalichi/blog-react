@@ -166,12 +166,13 @@ def delete_post(post_id):
     try:
         cursor.execute(query, val)
         if cursor.rowcount == 0:
+            db.rollback()
             raise Exception("Post not found or you don't have permission to delete it.")
         db.commit()
         return "Post deleted successfully"
     except Exception as e:
         db.rollback()
-        return f"Error deleting post: {str(e)}"
+        abort(404, f"Error deleting post: {str(e)}")
     finally:
         cursor.close()
         db.close()
@@ -204,12 +205,13 @@ def edit_post():
     try:
         cursor.execute(query, val)
         if cursor.rowcount == 0:
+            db.rollback()
             raise Exception("Post not found or you don't have permission to edit it.")
         db.commit()
         return "Post edited successfully"
     except Exception as e:
         db.rollback()
-        return f"Error editing post: {str(e)}"
+        abort(401, f"Error editing post: {str(e)}")
     finally:
         cursor.close()
         db.close()
