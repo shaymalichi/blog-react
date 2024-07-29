@@ -3,7 +3,7 @@ import './style/ItemWindow.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-const ItemWindow = ({ items, isUserName, onDeleteItem }) => {
+const ItemWindow = ({ items, isUserName, onDeleteItem, isCartView }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -62,8 +62,11 @@ const ItemWindow = ({ items, isUserName, onDeleteItem }) => {
                                 <button className="item-button" onClick={() => handleDeleteItem(item.id)}>Delete</button>
                             </div>
                         )}
-                        {isUserName !== 'admin' && isUserName !== '' && (
+                        {isUserName !== 'admin' && isUserName !== '' && !isCartView && (
                             <button className="item-button" onClick={() => handleAddToCart(item.id)}>Add to Cart</button>
+                        )}
+                        {isCartView && (
+                            <button className="item-button" onClick={() => onDeleteItem(item.id)}>Remove</button>
                         )}
                     </div>
                     <p className="content">{item.description}</p>

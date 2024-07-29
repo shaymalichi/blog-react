@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import ItemWindow from './ItemWindow';
 
 const Cart = ({ isUsername }) => {
     const [cartItems, setCartItems] = useState([]);
@@ -13,7 +14,7 @@ const Cart = ({ isUsername }) => {
     const handleRemoveItem = (itemId) => {
         axios.delete(`/cart/${itemId}`)
             .then(() => {
-                setCartItems(cartItems.filter(item => item.item_id !== itemId));
+                setCartItems(cartItems.filter(item => item.id !== itemId));
             })
             .catch(error => console.error('Error removing item from cart:', error));
     };
@@ -26,15 +27,12 @@ const Cart = ({ isUsername }) => {
     return (
         <div>
             <h2>Cart</h2>
-            {cartItems.map(item => (
-                <div key={item.id}>
-                    <h3>{item.name}</h3>
-                    <p>{item.description}</p>
-                    <p>Price: ${item.price}</p>
-                    <p>Quantity: {item.quantity}</p>
-                    <button onClick={() => handleRemoveItem(item.item_id)}>Remove</button>
-                </div>
-            ))}
+            <ItemWindow
+                items={cartItems}
+                isUserName={isUsername}
+                onDeleteItem={handleRemoveItem}
+                isCartView={true}
+            />
             <button onClick={handleCheckout}>Checkout</button>
         </div>
     );
