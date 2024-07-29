@@ -40,7 +40,7 @@ app.use(session({
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false } // Set to true if using https
+    cookie: { secure: false, maxAge: null } // MaxAge will be set dynamically
 }));
 
 app.use(express.static('build'));
@@ -141,7 +141,7 @@ app.post('/signup', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, rememberMe } = req.body;
     pool.getConnection((err, connection) => {
         if (err) throw err;
         const query = "SELECT id, username, password FROM users WHERE username = ?";
@@ -152,6 +152,21 @@ app.post('/login', (req, res) => {
                 if (bcrypt.compareSync(password, user.password)) {
                     req.session.user_id = user.id; // Store user ID in the session
                     req.session.username = user.username;
+
+                    // Set session cookie expiration
+                    if (rememberMe) {
+                        req.session.cookie.maxAge = 10 * 24 * 60 * 60 * 1000; // 10 days
+                    } else {
+                        req.session.cookie.maxAge = 30 * 60 * 1000; // 30 minutes
+                    }
+
+                    // Set the cookie expiration explicitly
+                    res.cookie('session_cookie_name', req.session.id, {
+                        maxAge: req.session.cookie.maxAge,
+                        httpOnly: true,
+                        secure: false // Set to true if using https
+                    });
+
                     res.json({ success: true });
                 } else {
                     res.status(401).json({ error: 'Invalid credentials' });
@@ -227,7 +242,7 @@ app.get('/cart', (req, res) => {
         const query = `
             SELECT items.id, items.name, items.description, items.price, items.image_url, cart.quantity
             FROM cart
-                     JOIN items ON cart.item_id = items.id
+            JOIN items ON cart.item_id = items.id
             WHERE cart.user_id = ?
         `;
         connection.query(query, [user_id], (error, results) => {
