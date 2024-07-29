@@ -1,29 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {Button, Grid, TextField, ThemeProvider} from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Grid, TextField, ThemeProvider } from "@mui/material";
 import theme from './style/theme';
 import { blue } from "@mui/material/colors";
 import axios from 'axios';
 
-function LoginForm({ setIsLoggedIn, setTheUsername}) {
+function LoginForm({ setIsLoggedIn, setTheUsername }) {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [rememberMe, setRememberMe] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
 
     const handleLogin = () => {
-        axios.post('/login', { username, password })
+        axios.post('/login', { username, password, rememberMe })
             .then(response => {
                 const data = response.data;
-                console.log(data)
                 if (data.success) {
-                    console.log("Login successful");
                     setLoggedIn(true);
-                    setIsLoggedIn(true)
-                    setTheUsername(username)
+                    setIsLoggedIn(true);
+                    setTheUsername(username);
                 } else {
-                    console.log(data.success)
-                    console.log("it seems its null: data.success")
                     console.log("Login failed");
                 }
             })
@@ -53,6 +50,12 @@ function LoginForm({ setIsLoggedIn, setTheUsername}) {
                     </div>
                     <div>
                         <TextField id="outlined-basic" label="Password" variant="outlined" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+                    </div>
+                    <div>
+                        <FormControlLabel
+                            control={<Checkbox checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} />}
+                            label="Remember Me"
+                        />
                     </div>
                     <div>
                         <ThemeProvider theme={theme(blue)}>
