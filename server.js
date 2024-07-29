@@ -33,13 +33,26 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/build/index.html');
 });
 
-app.route('/posts')
+app.route('/items')
     .get((req, res) => {
-        getAllPosts(res);
-    })
-    .post((req, res) => {
-        addPost(req, res);
+        getAllItems(res);
     });
+
+function getAllItems(res) {
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "SELECT id, name, description, price, stock, image_url, created_at FROM items";
+        connection.query(query, (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json(results.map(r => ({
+                ...r,
+                created_at: r.created_at.toISOString().replace('T', ' ').substr(0, 19)
+            })));
+        });
+    });
+}
+
 
 // function getAllPosts(res) {
 //     pool.getConnection((err, connection) => {

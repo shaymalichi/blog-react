@@ -10,12 +10,12 @@ import {blue} from "@mui/material/colors";
 import theme from "./style/theme"
 
 function App({isUsername}) {
-    const [posts, setPosts] = useState([])
+    const [items, setItems] = useState([])
 
     useEffect( () => {
-         const getData = () => axios.get('/posts').then(res => {
+         const getData = () => axios.get('/items').then(res => {
              console.log(res.data)
-             setPosts(res.data)
+             setItems(res.data)
          })
         getData().then(r => {})
     }, [])
@@ -25,9 +25,9 @@ function App({isUsername}) {
         <div>
             <ThemeProvider theme={theme(blue)}>
             <main>
-                <h1>This is my blog</h1>
+                <h1>This is my online store</h1>
                 <div className="content">
-                    <BlogPostWindow posts={posts} isUserName={isUsername} onDeletePost={setPosts} />
+                    <BlogPostWindow posts={items} isUserName={isUsername} onDeletePost={setItems} />
                     <div className="sideposts">
                         <LatestPosts/>
                         <PopularPosts/>

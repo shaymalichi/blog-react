@@ -1,6 +1,6 @@
 import './style/BlogPostWindow.css';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
@@ -8,11 +8,11 @@ const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
     const location = useLocation();
 
     const handleDeletePost = (postId) => {
-        const isConfirmed = window.confirm('Are you sure you want to delete this post?');
+        const isConfirmed = window.confirm('Are you sure you want to delete this item?');
 
         if (isConfirmed) {
             axios
-                .delete(`/posts/${postId}`, { data: {id: postId, user: isUserName }})
+                .delete(`/items/${postId}`, { data: { id: postId, user: isUserName } })
                 .then(() => {
                     const updatedPosts = posts.filter((post) => post.id !== postId);
                     onDeletePost(updatedPosts); // Call the callback function
@@ -28,7 +28,7 @@ const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
     };
 
     const handleViewPost = (postId) => {
-        navigate(`/posts/${postId}`);
+        navigate(`/items/${postId}`);
     };
 
     const handleCustomAction = (postId) => {
@@ -41,14 +41,14 @@ const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
                 <div className="blog-post-window" key={post.id}>
                     <div className="post-header">
                         <a
-                            href={`/posts/${post.id}`}
+                            href={`/items/${post.id}`}
                             className="title"
                             onClick={(event) => {
                                 event.preventDefault();
                                 handleViewPost(post.id);
                             }}
                         >
-                            {post.title}
+                            {post.name}
                         </a>
                         {post.user_id === isUserName && (
                             <div>
@@ -60,10 +60,12 @@ const BlogPostWindow = ({ posts, isUserName, onDeletePost }) => {
                             <button className="post-button" onClick={() => handleCustomAction(post.id)}>Comment</button>
                         )}
                     </div>
-                    {location.pathname === `/posts/${post.id}` && <p className="content">{post.body}</p>}
+                    <p className="content">{post.description}</p>
                     <div className="footer">
+                        <span className="price">Price: ${post.price}</span>
+                        <span className="stock">Stock: {post.stock}</span>
+                        {post.image_url && <img src={post.image_url} alt={post.name} className="item-image" />}
                         <span className="published-date">{post.created_at}</span>
-                        <span className="username">{post.user_id}</span>
                     </div>
                 </div>
             ))}
