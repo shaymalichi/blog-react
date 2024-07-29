@@ -5,7 +5,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const ItemWindow = ({ items, isUserName, onDeleteItem }) => {
     const navigate = useNavigate();
-    const location = useLocation();
 
     const handleDeleteItem = (itemId) => {
         const isConfirmed = window.confirm('Are you sure you want to delete this item?');
@@ -32,7 +31,7 @@ const ItemWindow = ({ items, isUserName, onDeleteItem }) => {
     };
 
     return (
-        <div>
+        <div className="item-container">
             {items.map((item) => (
                 <div className="item-window" key={item.id}>
                     <div className="item-header">
