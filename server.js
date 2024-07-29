@@ -51,7 +51,12 @@ app.get('/', (req, res) => {
 
 app.route('/items')
     .get((req, res) => {
-        getAllItems(res);
+        const { search } = req.query;
+        if (search) {
+            searchItems(search, res);
+        } else {
+            getAllItems(res);
+        }
     });
 
 function getAllItems(res) {
@@ -59,6 +64,22 @@ function getAllItems(res) {
         if (err) throw err;
         const query = "SELECT id, name, description, price, stock, image_url, created_at FROM items";
         connection.query(query, (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json(results.map(r => ({
+                ...r,
+                created_at: r.created_at.toISOString().replace('T', ' ').substr(0, 19)
+            })));
+        });
+    });
+}
+
+function searchItems(search, res) {
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "SELECT id, name, description, price, stock, image_url, created_at FROM items WHERE name LIKE ? OR description LIKE ?";
+        const searchTerm = `%${search}%`;
+        connection.query(query, [searchTerm, searchTerm], (error, results) => {
             connection.release();
             if (error) throw error;
             res.json(results.map(r => ({

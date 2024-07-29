@@ -1,10 +1,21 @@
-import './style/ItemWindow.css';
-import axios from 'axios';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import './style/ItemWindow.css';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const ItemWindow = ({ items, isUserName, onDeleteItem }) => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleAddToCart = (itemId) => {
+        axios.post('/cart/add', { item_id: itemId })
+            .then(() => {
+                console.log('Item added to cart');
+            })
+            .catch(error => {
+                console.error('Error adding item to cart:', error);
+            });
+    };
 
     const handleDeleteItem = (itemId) => {
         const isConfirmed = window.confirm('Are you sure you want to delete this item?');
@@ -28,16 +39,6 @@ const ItemWindow = ({ items, isUserName, onDeleteItem }) => {
 
     const handleViewItem = (itemId) => {
         navigate(`/items/${itemId}`);
-    };
-
-    const handleAddToCart = (itemId) => {
-        axios.post('/cart/add', { item_id: itemId })
-            .then(response => {
-                alert('Item added to cart successfully');
-            })
-            .catch(error => {
-                console.error('Error adding item to cart:', error);
-            });
     };
 
     return (
