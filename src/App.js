@@ -1,10 +1,8 @@
 import React from "react";
 import {useEffect, useState} from "react";
 import "./style/style.css";
-import LatestPosts from "./staticComponents/LatestPosts";
-import PopularPosts from "./staticComponents/PopularPosts";
 import axios from "axios";
-import BlogPostWindow from "./BlogPostWindow";
+import ItemWindow from "./ItemWindow";
 import {ThemeProvider} from "@mui/material";
 import {blue} from "@mui/material/colors";
 import theme from "./style/theme"
@@ -21,22 +19,18 @@ function App({isUsername}) {
     }, [])
 
     return (
-
         <div>
             <ThemeProvider theme={theme(blue)}>
-            <main>
-                <h1>This is my online store</h1>
-                <div className="content">
-                    <BlogPostWindow posts={items} isUserName={isUsername} onDeletePost={setItems} />
-                    <div className="sideposts">
-                        <LatestPosts/>
-                        <PopularPosts/>
+                <main>
+                    <h1>Welcome to My Online Store</h1>
+                    <div className="content">
+                        <ItemWindow items={items} isUserName={isUsername} onDeleteItem={setItems} />
+                        <div className="sideposts">
+                        </div>
                     </div>
-                </div>
-            </main>
+                </main>
             </ThemeProvider>
         </div>
-
     );
 }
 

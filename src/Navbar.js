@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Navbar({ isLoggedIn, isUsername, handleLogout }) {
   if (!isLoggedIn) {
@@ -9,47 +9,41 @@ function Navbar({ isLoggedIn, isUsername, handleLogout }) {
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/about">About Me</Link>
+              <Link to="/products">Products</Link>
             </li>
             <li>
-              <Link to="/contact">Contact Me</Link>
+              <Link to="/login">Login</Link>
             </li>
             <li>
-              <Link to="login">login</Link>
-            </li>
-            <li>
-              <Link to="Signup">SignUp</Link>
+              <Link to="/signup">Sign Up</Link>
             </li>
           </ul>
         </nav>
     );
-  }
-  else {
-    console.log(isLoggedIn)
+  } else {
     return (
         <nav>
-          <div>hi {isUsername}</div>
+          <div>Hi, {isUsername}</div>
           <ul>
             <li>
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/about">About Me</Link>
+              <Link to="/products">Products</Link>
             </li>
             <li>
-              <Link to="/contact">Contact Me</Link>
+              <Link to="/cart">Cart</Link>
             </li>
             <li>
-              <Link to="/new-post">New Post</Link>
+              <Link to="/admin">Admin</Link>
             </li>
             <li>
-              <Link to="/" onClick={handleLogout}>logout</Link>
+              <Link to="/" onClick={handleLogout}>Logout</Link>
             </li>
           </ul>
         </nav>
     );
   }
-
 }
 
 export default Navbar;

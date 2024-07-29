@@ -53,64 +53,22 @@ function getAllItems(res) {
     });
 }
 
+app.post('/add-item', (req, res) => {
+    const { name, description, price, stock, image_url, created_at, user_id } = req.body;
+    if (user_id !== 'admin') {
+        return res.status(403).json({ message: 'Only admin can add items' });
+    }
 
-// function getAllPosts(res) {
-//     pool.getConnection((err, connection) => {
-//         if (err) throw err;
-//         const query = "SELECT user_id, id, title, body, created_at FROM posts1";
-//         connection.query(query, (error, results) => {
-//             connection.release();
-//             if (error) throw error;
-//             res.json(results.map(r => ({
-//                 ...r,
-//                 created_at: r.created_at.toISOString().replace('T', ' ').substr(0, 19)
-//             })));
-//         });
-//     });
-// }
-
-// app.get('/posts/:post_id/comments', (req, res) => {
-//     const post_id = req.params.post_id;
-//     pool.getConnection((err, connection) => {
-//         if (err) throw err;
-//         const query = "SELECT user_id, body, post_id FROM comments WHERE post_id = ?";
-//         connection.query(query, [post_id], (error, results) => {
-//             connection.release();
-//             if (error) throw error;
-//             res.json(results);
-//         });
-//     });
-// });
-
-// app.route('/posts/:post_id')
-//     .get((req, res) => {
-//         getPost(req.params.post_id, res);
-//     })
-//     .post((req, res) => {
-//         editPost(req, res);
-//     })
-//     .delete((req, res) => {
-//         deletePost(req.params.post_id, req, res);
-//     });
-
-// function getPost(post_id, res) {
-//     pool.getConnection((err, connection) => {
-//         if (err) throw err;
-//         const query = "SELECT user_id, id, title, body, created_at FROM posts1 WHERE id = ?";
-//         connection.query(query, [post_id], (error, result) => {
-//             connection.release();
-//             if (error) throw error;
-//             if (result.length) {
-//                 res.json({
-//                     ...result[0],
-//                     created_at: result[0].created_at.toISOString().replace('T', ' ').substr(0, 19)
-//                 });
-//             } else {
-//                 res.status(404).json({ error: 'Post not found' });
-//             }
-//         });
-//     });
-// }
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "INSERT INTO items (name, description, price, stock, image_url, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+        connection.query(query, [name, description, price, stock, image_url, created_at], (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json({ message: 'Item added successfully', new_item_id: results.insertId });
+        });
+    });
+});
 
 app.post('/signup', (req, res) => {
     const { username, password, created_at } = req.body;
@@ -148,57 +106,6 @@ app.post('/signup', (req, res) => {
         });
     });
 });
-
-
-
-// function addPost(req, res) {
-//     const { title, body, created_at } = req.body;
-//     const user = sessionCheck(req);
-//     pool.getConnection((err, connection) => {
-//         if (err) throw err;
-//         const query = "INSERT INTO posts1 (user_id, title, body, created_at) VALUES (?, ?, ?, ?)";
-//         connection.query(query, [user, title, body, created_at], (error, results) => {
-//             connection.release();
-//             if (error) throw error;
-//             res.json({ message: 'Post added successfully', new_city_id: results.insertId });
-//         });
-//     });
-// }
-
-// function deletePost(post_id, req, res) {
-//     const user = sessionCheck(req);
-//     pool.getConnection((err, connection) => {
-//         if (err) throw err;
-//         const query = "DELETE FROM posts1 WHERE id = ? AND user_id = ?";
-//         connection.query(query, [post_id, user], (error, results) => {
-//             if (error) {
-//                 connection.release();
-//                 res.status(404).json({ error: "Error deleting post: " + error.message });
-//             } else {
-//                 connection.commit();
-//                 connection.release();
-//                 res.send("Post deleted successfully");
-//             }
-//         });
-//     });
-// }
-
-// function editPost(req, res) {
-//     const { postid, content } = req.body;
-//     const user = sessionCheck(req);
-//     pool.getConnection((err, connection) => {
-//         if (err) throw err;
-//         const query = "UPDATE posts1 SET body = ? WHERE id = ? AND user_id = ?";
-//         connection.query(query, [content, postid, user], (error, results) => {
-//             connection.release();
-//             if (error) {
-//                 res.status(401).json({ error: "Error editing post: " + error.message });
-//             } else {
-//                 res.send("Post edited successfully");
-//             }
-//         });
-//     });
-// }
 
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
@@ -261,27 +168,6 @@ function sessionCheck(req) {
         });
     });
 }
-
-// app.post('/comments', (req, res) => {
-//     const { postid, content } = req.body;
-//     sessionCheck(req).then(username => {
-//         if (!username) {
-//             res.status(401).json({ error: "Unauthorized" });
-//         } else {
-//             pool.getConnection((err, connection) => {
-//                 if (err) throw err;
-//                 const query = "INSERT INTO comments (user_id, body, post_id) VALUES (?, ?, ?)";
-//                 connection.query(query, [username, content, postid], (error) => {
-//                     connection.release();
-//                     if (error) throw error;
-//                     res.sendStatus(201);
-//                 });
-//             });
-//         }
-//     }).catch(err => {
-//         res.status(500).json({ error: "Internal Server Error" });
-//     });
-// });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
