@@ -1,69 +1,52 @@
-.blog-post-window {
-    width: 600px;
-    margin: 0 auto;
-    padding: 20px;
+.item-window {
     border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
-.post-header {
+.item-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+    width: 100%;
+    margin-bottom: 8px;
 }
 
 .title {
-    font-size: 24px;
+    font-size: 1.5em;
     font-weight: bold;
-}
-
-.post-button {
-    font-size: 16px;
-    margin-right: 5px;
-}
-
-.edit-button {
-    font-size: 16px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.custom-button {
-    font-size: 16px;
-    background-color: #ff9800;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
+    text-decoration: none;
+    color: #333;
 }
 
 .content {
-    font-size: 16px;
-    line-height: 1.5;
-    margin-bottom: 20px;
+    margin-top: 8px;
+    font-size: 1em;
+    color: #666;
+    text-align: left;
 }
 
 .footer {
+    margin-top: 16px;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    align-items: center;
 }
 
-.published-date,
-.username {
-    font-size: 14px;
-    margin-left: 10px;
+.published-date, .price, .stock {
+    font-size: 0.9em;
+    color: #999;
+    margin-bottom: 8px;
 }
 
-.username::before {
-    content: 'By: ';
-}
-
-.published-date::before {
-    content: 'Published: ';
+.item-image {
+    width: 200px; /* Set the fixed width */
+    height: 200px; /* Set the fixed height */
+    object-fit: cover; /* Maintain aspect ratio and cover the area */
+    border-radius: 8px;
+    margin-top: 16px;
 }
