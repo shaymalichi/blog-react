@@ -8,13 +8,17 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, isCartView }) => {
     const location = useLocation();
 
     const handleAddToCart = (itemId) => {
-        axios.post('/cart/add', { item_id: itemId })
-            .then(() => {
-                console.log('Item added to cart');
-            })
-            .catch(error => {
-                console.error('Error adding item to cart:', error);
-            });
+        if (!isUserName) {
+            navigate('/login');
+        } else {
+            axios.post('/cart/add', { item_id: itemId })
+                .then(() => {
+                    console.log('Item added to cart');
+                })
+                .catch(error => {
+                    console.error('Error adding item to cart:', error);
+                });
+        }
     };
 
     const handleDeleteItem = (itemId) => {
@@ -62,7 +66,7 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, isCartView }) => {
                                 <button className="item-button" onClick={() => handleDeleteItem(item.id)}>Delete</button>
                             </div>
                         )}
-                        {isUserName !== 'admin' && isUserName !== '' && !isCartView && (
+                        {!isCartView && (
                             <button className="item-button" onClick={() => handleAddToCart(item.id)}>Add to Cart</button>
                         )}
                         {isCartView && (
