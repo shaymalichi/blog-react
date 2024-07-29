@@ -53,6 +53,24 @@ function getAllItems(res) {
     });
 }
 
+app.get('/items/:id', (req, res) => {
+    const { id } = req.params;
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "SELECT id, name, description, price, stock, image_url, created_at FROM items WHERE id = ?";
+        connection.query(query, [id], (error, results) => {
+            connection.release();
+            if (error) throw error;
+            if (results.length) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Item not found' });
+            }
+        });
+    });
+});
+
+
 app.post('/add-item', (req, res) => {
     const { name, description, price, stock, image_url, created_at, user_id } = req.body;
     if (user_id !== 'admin') {
