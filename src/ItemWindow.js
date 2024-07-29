@@ -76,7 +76,11 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, isCartView }) => {
                     <p className="content">{item.description}</p>
                     <div className="footer">
                         <span className="price">Price: ${item.price}</span>
-                        <span className="stock">Stock: {item.stock}</span>
+                        {isCartView ? (
+                            <span className="stock">Quantity: {item.quantity}</span>
+                        ) : (
+                            <span className="stock">Stock: {item.stock}</span>
+                        )}
                         {item.image_url && <img src={item.image_url} alt={item.name} className="item-image" />}
                         <span className="published-date">{item.created_at}</span>
                     </div>
