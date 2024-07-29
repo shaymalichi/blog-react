@@ -295,6 +295,7 @@ app.get('/cart', (req, res) => {
 
 app.delete('/cart/:item_id', (req, res) => {
     const { item_id } = req.params;
+    const { quantity } = req.body; // Get the quantity to remove from the request body
     const user_id = req.session.user_id;
 
     // Check if the user is logged in
@@ -304,11 +305,32 @@ app.delete('/cart/:item_id', (req, res) => {
 
     pool.getConnection((err, connection) => {
         if (err) throw err;
-        const query = "DELETE FROM cart WHERE user_id = ? AND item_id = ?";
-        connection.query(query, [user_id, item_id], (error, results) => {
-            connection.release();
-            if (error) throw error;
-            res.json({ message: 'Item removed from cart successfully' });
+
+        // First, check the current quantity of the item in the cart
+        const checkQuery = "SELECT quantity FROM cart WHERE user_id = ? AND item_id = ?";
+        connection.query(checkQuery, [user_id, item_id], (error, results) => {
+            if (error) {
+                connection.release();
+                throw error;
+            }
+
+            if (results.length && results[0].quantity > quantity) {
+                // If the current quantity is greater than the quantity to remove, update the quantity
+                const updateQuery = "UPDATE cart SET quantity = quantity - ? WHERE user_id = ? AND item_id = ?";
+                connection.query(updateQuery, [quantity, user_id, item_id], (error, results) => {
+                    connection.release();
+                    if (error) throw error;
+                    res.json({ message: 'Item quantity updated successfully' });
+                });
+            } else {
+                // If the current quantity is less than or equal to the quantity to remove, delete the item from the cart
+                const deleteQuery = "DELETE FROM cart WHERE user_id = ? AND item_id = ?";
+                connection.query(deleteQuery, [user_id, item_id], (error, results) => {
+                    connection.release();
+                    if (error) throw error;
+                    res.json({ message: 'Item removed from cart successfully' });
+                });
+            }
         });
     });
 });

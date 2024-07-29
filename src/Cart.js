@@ -11,10 +11,25 @@ const Cart = ({ isUsername }) => {
             .catch(error => console.error('Error fetching cart items:', error));
     }, []);
 
-    const handleRemoveItem = (itemId) => {
-        axios.delete(`/cart/${itemId}`)
+    const handleRemoveItem = (itemId, currentQuantity) => {
+        let quantityToRemove = 1;
+
+        if (currentQuantity > 1) {
+            quantityToRemove = parseInt(prompt(`Enter quantity to remove (1-${currentQuantity}):`, "1"), 10);
+            if (isNaN(quantityToRemove) || quantityToRemove < 1 || quantityToRemove > currentQuantity) {
+                alert(`Invalid quantity. Please enter a number between 1 and ${currentQuantity}.`);
+                return;
+            }
+        }
+
+        axios.delete(`/cart/${itemId}`, { data: { quantity: quantityToRemove } })
             .then(() => {
-                setCartItems(cartItems.filter(item => item.id !== itemId));
+                setCartItems(cartItems => cartItems.map(item => {
+                    if (item.id === itemId) {
+                        return { ...item, quantity: item.quantity - quantityToRemove };
+                    }
+                    return item;
+                }).filter(item => item.quantity > 0));
             })
             .catch(error => console.error('Error removing item from cart:', error));
     };
@@ -30,7 +45,7 @@ const Cart = ({ isUsername }) => {
             <ItemWindow
                 items={cartItems}
                 isUserName={isUsername}
-                onDeleteItem={handleRemoveItem}
+                onDeleteItem={(itemId, currentQuantity) => handleRemoveItem(itemId, currentQuantity)}
                 isCartView={true}
             />
             <button onClick={handleCheckout}>Checkout</button>

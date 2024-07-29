@@ -21,19 +21,11 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, isCartView }) => {
         }
     };
 
-    const handleDeleteItem = (itemId) => {
+    const handleDeleteItem = (itemId, currentQuantity) => {
         const isConfirmed = window.confirm('Are you sure you want to delete this item?');
 
         if (isConfirmed) {
-            axios
-                .delete(`/items/${itemId}`, { data: { id: itemId, user: isUserName } })
-                .then(() => {
-                    const updatedItems = items.filter((item) => item.id !== itemId);
-                    onDeleteItem(updatedItems); // Call the callback function
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+            onDeleteItem(itemId, currentQuantity);
         }
     };
 
@@ -63,14 +55,14 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, isCartView }) => {
                         {isUserName === 'admin' && (
                             <div>
                                 <button className="item-button" onClick={() => handleEditItem(item.id)}>Edit</button>
-                                <button className="item-button" onClick={() => handleDeleteItem(item.id)}>Delete</button>
+                                <button className="item-button" onClick={() => handleDeleteItem(item.id, item.quantity)}>Delete</button>
                             </div>
                         )}
                         {!isCartView && (
                             <button className="item-button" onClick={() => handleAddToCart(item.id)}>Add to Cart</button>
                         )}
                         {isCartView && (
-                            <button className="item-button" onClick={() => onDeleteItem(item.id)}>Remove</button>
+                            <button className="item-button" onClick={() => handleDeleteItem(item.id, item.quantity)}>Remove</button>
                         )}
                     </div>
                     <p className="content">{item.description}</p>
