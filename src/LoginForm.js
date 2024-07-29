@@ -20,6 +20,7 @@ function LoginForm({ setIsLoggedIn, setTheUsername }) {
                     setLoggedIn(true);
                     setIsLoggedIn(true);
                     setTheUsername(username);
+                    localStorage.setItem('username', username);
                 } else {
                     console.log("Login failed");
                 }

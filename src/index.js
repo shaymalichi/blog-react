@@ -18,11 +18,20 @@ function MainApp() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
     const [isUsername, setTheUsername] = React.useState("");
 
+    React.useEffect(() => {
+        const savedUsername = localStorage.getItem('username');
+        if (savedUsername) {
+            setIsLoggedIn(true);
+            setTheUsername(savedUsername);
+        }
+    }, []);
+
     const handleLogout = () => {
         axios.post('/logout', { username: isUsername })
             .then(() => {
                 setIsLoggedIn(false);
                 setTheUsername("");
+                localStorage.removeItem('username');
             })
             .catch(error => {
                 console.error('Error occurred during logout:', error);
