@@ -241,11 +241,30 @@ app.post('/cart/add', (req, res) => {
 
     pool.getConnection((err, connection) => {
         if (err) throw err;
-        const query = "INSERT INTO cart (user_id, item_id) VALUES (?, ?)";
-        connection.query(query, [req.session.user_id, item_id], (error, results) => {
-            connection.release();
-            if (error) throw error;
-            res.json({ message: 'Item added to cart successfully' });
+        const checkQuery = "SELECT quantity FROM cart WHERE user_id = ? AND item_id = ?";
+        connection.query(checkQuery, [req.session.user_id, item_id], (error, results) => {
+            if (error) {
+                connection.release();
+                throw error;
+            }
+
+            if (results.length > 0) {
+                // Item already in cart, update quantity
+                const updateQuery = "UPDATE cart SET quantity = quantity + 1 WHERE user_id = ? AND item_id = ?";
+                connection.query(updateQuery, [req.session.user_id, item_id], (error, results) => {
+                    connection.release();
+                    if (error) throw error;
+                    res.json({ message: 'Item quantity updated successfully' });
+                });
+            } else {
+                // Item not in cart, insert new row
+                const insertQuery = "INSERT INTO cart (user_id, item_id, quantity) VALUES (?, ?, 1)";
+                connection.query(insertQuery, [req.session.user_id, item_id], (error, results) => {
+                    connection.release();
+                    if (error) throw error;
+                    res.json({ message: 'Item added to cart successfully' });
+                });
+            }
         });
     });
 });
@@ -263,7 +282,7 @@ app.get('/cart', (req, res) => {
         const query = `
             SELECT items.id, items.name, items.description, items.price, items.image_url, cart.quantity
             FROM cart
-            JOIN items ON cart.item_id = items.id
+                     JOIN items ON cart.item_id = items.id
             WHERE cart.user_id = ?
         `;
         connection.query(query, [user_id], (error, results) => {
