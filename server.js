@@ -187,6 +187,70 @@ function sessionCheck(req) {
     });
 }
 
+app.post('/cart/add', (req, res) => {
+    const { item_id, user_id } = req.body;
+
+    // Check if the user is logged in
+    if (!req.session.user_id) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "INSERT INTO cart (user_id, item_id) VALUES (?, ?)";
+        connection.query(query, [user_id, item_id], (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json({ message: 'Item added to cart successfully' });
+        });
+    });
+});
+
+app.get('/cart', (req, res) => {
+    const user_id = req.session.user_id;
+
+    // Check if the user is logged in
+    if (!user_id) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = `
+            SELECT items.id, items.name, items.description, items.price, items.image_url, cart.quantity
+            FROM cart
+            JOIN items ON cart.item_id = items.id
+            WHERE cart.user_id = ?
+        `;
+        connection.query(query, [user_id], (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json(results);
+        });
+    });
+});
+
+app.delete('/cart/:item_id', (req, res) => {
+    const { item_id } = req.params;
+    const user_id = req.session.user_id;
+
+    // Check if the user is logged in
+    if (!user_id) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "DELETE FROM cart WHERE user_id = ? AND item_id = ?";
+        connection.query(query, [user_id, item_id], (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json({ message: 'Item removed from cart successfully' });
+        });
+    });
+});
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

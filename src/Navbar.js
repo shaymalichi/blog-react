@@ -34,9 +34,11 @@ function Navbar({ isLoggedIn, isUsername, handleLogout }) {
             <li>
               <Link to="/cart">Cart</Link>
             </li>
-            <li>
-              <Link to="/admin">Admin</Link>
-            </li>
+            {isUsername === 'admin' && (
+                <li>
+                  <Link to="/admin">Admin</Link>
+                </li>
+            )}
             <li>
               <Link to="/" onClick={handleLogout}>Logout</Link>
             </li>

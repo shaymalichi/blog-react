@@ -1,7 +1,7 @@
 import './style/ItemWindow.css';
 import axios from 'axios';
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const ItemWindow = ({ items, isUserName, onDeleteItem }) => {
     const navigate = useNavigate();
@@ -30,6 +30,16 @@ const ItemWindow = ({ items, isUserName, onDeleteItem }) => {
         navigate(`/items/${itemId}`);
     };
 
+    const handleAddToCart = (itemId) => {
+        axios.post('/cart/add', { item_id: itemId, user_id: isUserName })
+            .then(response => {
+                alert('Item added to cart successfully');
+            })
+            .catch(error => {
+                console.error('Error adding item to cart:', error);
+            });
+    };
+
     return (
         <div className="item-container">
             {items.map((item) => (
@@ -45,11 +55,14 @@ const ItemWindow = ({ items, isUserName, onDeleteItem }) => {
                         >
                             {item.name}
                         </a>
-                        {item.user_id === isUserName && (
+                        {isUserName === 'admin' && (
                             <div>
                                 <button className="item-button" onClick={() => handleEditItem(item.id)}>Edit</button>
                                 <button className="item-button" onClick={() => handleDeleteItem(item.id)}>Delete</button>
                             </div>
+                        )}
+                        {isUserName !== 'admin' && isUserName !== '' && (
+                            <button className="item-button" onClick={() => handleAddToCart(item.id)}>Add to Cart</button>
                         )}
                     </div>
                     <p className="content">{item.description}</p>

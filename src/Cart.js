@@ -13,9 +13,14 @@ const Cart = ({ isUsername }) => {
     const handleRemoveItem = (itemId) => {
         axios.delete(`/cart/${itemId}`)
             .then(() => {
-                setCartItems(cartItems.filter(item => item.id !== itemId));
+                setCartItems(cartItems.filter(item => item.item_id !== itemId));
             })
             .catch(error => console.error('Error removing item from cart:', error));
+    };
+
+    const handleCheckout = () => {
+        // Add your checkout logic here
+        alert('Proceeding to checkout...');
     };
 
     return (
@@ -26,10 +31,11 @@ const Cart = ({ isUsername }) => {
                     <h3>{item.name}</h3>
                     <p>{item.description}</p>
                     <p>Price: ${item.price}</p>
-                    <button onClick={() => handleRemoveItem(item.id)}>Remove</button>
+                    <p>Quantity: {item.quantity}</p>
+                    <button onClick={() => handleRemoveItem(item.item_id)}>Remove</button>
                 </div>
             ))}
-            <button onClick={() => {/* Add checkout logic here */}}>Checkout</button>
+            <button onClick={handleCheckout}>Checkout</button>
         </div>
     );
 };
