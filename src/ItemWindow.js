@@ -31,7 +31,7 @@ const ItemWindow = ({ items, isUserName, onDeleteItem }) => {
     };
 
     const handleAddToCart = (itemId) => {
-        axios.post('/cart/add', { item_id: itemId, user_id: isUserName })
+        axios.post('/cart/add', { item_id: itemId })
             .then(response => {
                 alert('Item added to cart successfully');
             })

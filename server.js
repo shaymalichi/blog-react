@@ -6,6 +6,7 @@ const uuid = require('uuid');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const MySQLStore = require('express-mysql-session')(session);
 
 const app = express();
 
@@ -17,13 +18,28 @@ const pool = mysql.createPool({
     connectionLimit: 5
 });
 
+const sessionStore = new MySQLStore({
+    expiration: 10800000,
+    createDatabaseTable: true,
+    schema: {
+        tableName: 'sessions',
+        columnNames: {
+            session_id: 'session_id',
+            expires: 'expires',
+            data: 'data'
+        }
+    }
+}, pool);
+
 app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(session({
+    key: 'session_cookie_name',
     secret: '123',
+    store: sessionStore,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { secure: false } // Set to true if using https
 }));
 
@@ -69,7 +85,6 @@ app.get('/items/:id', (req, res) => {
         });
     });
 });
-
 
 app.post('/add-item', (req, res) => {
     const { name, description, price, stock, image_url, created_at, user_id } = req.body;
@@ -129,22 +144,15 @@ app.post('/login', (req, res) => {
     const { username, password } = req.body;
     pool.getConnection((err, connection) => {
         if (err) throw err;
-        const query = "SELECT username, password FROM users WHERE username = ?";
+        const query = "SELECT id, username, password FROM users WHERE username = ?";
         connection.query(query, [username], (error, results) => {
             connection.release();
             if (results.length) {
-                const hashedPassword = results[0].password;
-                if (bcrypt.compareSync(password, hashedPassword)) {
-                    const sessionId = uuid.v4();
-                    pool.getConnection((err, connection) => {
-                        if (err) throw err;
-                        const sessionQuery = "INSERT INTO sessions (username, session_id) VALUES (?, ?)";
-                        connection.query(sessionQuery, [username, sessionId], (err) => {
-                            connection.release();
-                            if (err) throw err;
-                            res.cookie("session_id", sessionId).json({ success: true });
-                        });
-                    });
+                const user = results[0];
+                if (bcrypt.compareSync(password, user.password)) {
+                    req.session.user_id = user.id; // Store user ID in the session
+                    req.session.username = user.username;
+                    res.json({ success: true });
                 } else {
                     res.status(401).json({ error: 'Invalid credentials' });
                 }
@@ -156,13 +164,13 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/logout', (req, res) => {
-    const username = sessionCheck(req);
+    const username = req.session.username;
     req.session.destroy();
-    res.clearCookie("session_id");
+    res.clearCookie("session_cookie_name");
     pool.getConnection((err, connection) => {
         if (err) throw err;
-        const query = "DELETE FROM sessions WHERE username = ?";
-        connection.query(query, [username], (error) => {
+        const query = "DELETE FROM sessions WHERE session_id = ?";
+        connection.query(query, [req.cookies.session_id], (error) => {
             connection.release();
             if (error) throw error;
             res.sendStatus(200);
@@ -171,16 +179,16 @@ app.post('/logout', (req, res) => {
 });
 
 function sessionCheck(req) {
-    const sessionId = req.cookies.session_id;
+    const sessionId = req.cookies.session_cookie_name;
     if (!sessionId) return null;
     return new Promise((resolve, reject) => {
         pool.getConnection((err, connection) => {
             if (err) reject(err);
-            const query = "SELECT username FROM sessions WHERE session_id = ?";
+            const query = "SELECT data FROM sessions WHERE session_id = ?";
             connection.query(query, [sessionId], (error, results) => {
                 connection.release();
                 if (error) reject(error);
-                if (results.length) resolve(results[0].username);
+                if (results.length) resolve(results[0].data);
                 else resolve(null);
             });
         });
@@ -188,7 +196,7 @@ function sessionCheck(req) {
 }
 
 app.post('/cart/add', (req, res) => {
-    const { item_id, user_id } = req.body;
+    const { item_id } = req.body;
 
     // Check if the user is logged in
     if (!req.session.user_id) {
@@ -198,7 +206,7 @@ app.post('/cart/add', (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) throw err;
         const query = "INSERT INTO cart (user_id, item_id) VALUES (?, ?)";
-        connection.query(query, [user_id, item_id], (error, results) => {
+        connection.query(query, [req.session.user_id, item_id], (error, results) => {
             connection.release();
             if (error) throw error;
             res.json({ message: 'Item added to cart successfully' });
@@ -219,7 +227,7 @@ app.get('/cart', (req, res) => {
         const query = `
             SELECT items.id, items.name, items.description, items.price, items.image_url, cart.quantity
             FROM cart
-            JOIN items ON cart.item_id = items.id
+                     JOIN items ON cart.item_id = items.id
             WHERE cart.user_id = ?
         `;
         connection.query(query, [user_id], (error, results) => {
@@ -249,7 +257,6 @@ app.delete('/cart/:item_id', (req, res) => {
         });
     });
 });
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
