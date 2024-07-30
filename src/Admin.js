@@ -40,8 +40,6 @@ const Admin = ({ isUsername }) => {
                 ))}
                 </tbody>
             </table>
-            <h3>Manage Products</h3>
-            {/* Add form and logic to manage products here */}
         </div>
     );
 };

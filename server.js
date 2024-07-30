@@ -188,6 +188,8 @@ app.post('/login', (req, res) => {
                         secure: false // Set to true if using https
                     });
 
+                    logActivity(user.id, username, 'login'); // Log login activity
+
                     res.json({ success: true });
                 } else {
                     res.status(401).json({ error: 'Invalid credentials' });
@@ -209,6 +211,7 @@ app.post('/logout', (req, res) => {
         connection.query(query, [req.cookies.session_id], (error) => {
             connection.release();
             if (error) throw error;
+            logActivity(null, username, 'logout'); // Log logout activity
             res.sendStatus(200);
         });
     });
@@ -254,6 +257,7 @@ app.post('/cart/add', (req, res) => {
                 connection.query(updateQuery, [req.session.user_id, item_id], (error, results) => {
                     connection.release();
                     if (error) throw error;
+                    logActivity(req.session.user_id, req.session.username, 'add-to-cart'); // Log add-to-cart activity
                     res.json({ message: 'Item quantity updated successfully' });
                 });
             } else {
@@ -262,6 +266,7 @@ app.post('/cart/add', (req, res) => {
                 connection.query(insertQuery, [req.session.user_id, item_id], (error, results) => {
                     connection.release();
                     if (error) throw error;
+                    logActivity(req.session.user_id, req.session.username, 'add-to-cart'); // Log add-to-cart activity
                     res.json({ message: 'Item added to cart successfully' });
                 });
             }
@@ -418,6 +423,33 @@ app.post('/checkout', (req, res) => {
         });
     });
 });
+
+app.get('/admin/activities', (req, res) => {
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "SELECT * FROM activities ORDER BY datetime DESC";
+        connection.query(query, (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json(results);
+        });
+    });
+});
+
+
+
+const logActivity = (user_id, username, type) => {
+    const datetime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "INSERT INTO activities (user_id, username, type, datetime) VALUES (?, ?, ?, ?)";
+        connection.query(query, [user_id, username, type, datetime], (error, results) => {
+            connection.release();
+            if (error) throw error;
+        });
+    });
+};
+
 
 
 
