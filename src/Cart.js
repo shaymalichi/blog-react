@@ -52,6 +52,7 @@ const Cart = ({ isUsername }) => {
     const handleCheckout = () => {
         axios.post('/checkout')
             .then(() => {
+                alert("are you sure you want to purchase those items ?")
                 navigate('/thank-you');
             })
             .catch(error => {
