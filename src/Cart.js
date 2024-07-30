@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import ItemWindow from './ItemWindow';
 
 const Cart = ({ isUsername }) => {
     const [cartItems, setCartItems] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get('/cart')
@@ -48,8 +50,14 @@ const Cart = ({ isUsername }) => {
     };
 
     const handleCheckout = () => {
-        // Add your checkout logic here
-        alert('Proceeding to checkout...');
+        axios.post('/checkout')
+            .then(() => {
+                navigate('/thank-you');
+            })
+            .catch(error => {
+                console.error('Error during checkout:', error);
+                alert('An error occurred during checkout. Please try again.');
+            });
     };
 
     return (

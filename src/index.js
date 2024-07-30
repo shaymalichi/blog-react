@@ -13,6 +13,7 @@ import EditItemComponent from './EditItemComponent'; // Renamed component
 import Cart from './Cart'; // New component
 import Admin from './Admin'; // New component
 import NewItem from './NewItem'; // New component
+import ThankYou from './ThankYou'; // New component
 
 function MainApp() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -48,11 +49,12 @@ function MainApp() {
                     <Route path="/contact" element={<Contact />} /> {/* Update or remove if not needed */}
                     <Route path="/login" element={<LoginForm setIsLoggedIn={setIsLoggedIn} setTheUsername={setTheUsername} />} />
                     <Route path="/signup" element={<SignupForm />} />
-                    <Route path="/items/:id" element={<Item />} />
+                    <Route path="/items/:id" element={<Item isUsername={isUsername} />} />
                     <Route path="/edit/:itemId" element={<EditItemComponent isUsername={isUsername} />} />
                     <Route path="/cart" element={<Cart isUsername={isUsername} />} />
                     <Route path="/admin" element={<Admin isUsername={isUsername} />} />
                     <Route path="/new-item" element={isUsername === 'admin' ? <NewItem isUsername={isUsername} /> : <App isUsername={isUsername} />} />
+                    <Route path="/thank-you" element={<ThankYou />} /> {/* New route */}
                 </Routes>
             </BrowserRouter>
         </React.StrictMode>

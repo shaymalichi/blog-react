@@ -335,6 +335,92 @@ app.delete('/cart/:item_id', (req, res) => {
     });
 });
 
+app.post('/checkout', (req, res) => {
+    const user_id = req.session.user_id;
+
+    // Check if the user is logged in
+    if (!user_id) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+
+        // Start a transaction
+        connection.beginTransaction(err => {
+            if (err) {
+                connection.release();
+                throw err;
+            }
+
+            // Get cart items for the user
+            const query = `
+                SELECT items.id, items.name, items.stock, cart.quantity
+                FROM cart
+                JOIN items ON cart.item_id = items.id
+                WHERE cart.user_id = ?
+            `;
+            connection.query(query, [user_id], (error, cartItems) => {
+                if (error) {
+                    return connection.rollback(() => {
+                        connection.release();
+                        throw error;
+                    });
+                }
+
+                // Update the stock for each item
+                const updateStockPromises = cartItems.map(item => {
+                    return new Promise((resolve, reject) => {
+                        const newStock = item.stock - item.quantity;
+                        if (newStock < 0) {
+                            return reject(new Error(`Not enough stock for item: ${item.name}`));
+                        }
+                        const updateQuery = "UPDATE items SET stock = ? WHERE id = ?";
+                        connection.query(updateQuery, [newStock, item.id], (err, result) => {
+                            if (err) return reject(err);
+                            resolve(result);
+                        });
+                    });
+                });
+
+                Promise.all(updateStockPromises)
+                    .then(() => {
+                        // Clear the cart
+                        const deleteQuery = "DELETE FROM cart WHERE user_id = ?";
+                        connection.query(deleteQuery, [user_id], (error, results) => {
+                            if (error) {
+                                return connection.rollback(() => {
+                                    connection.release();
+                                    throw error;
+                                });
+                            }
+
+                            // Commit the transaction
+                            connection.commit(err => {
+                                if (err) {
+                                    return connection.rollback(() => {
+                                        connection.release();
+                                        throw err;
+                                    });
+                                }
+                                connection.release();
+                                res.json({ message: 'Checkout successful' });
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        connection.rollback(() => {
+                            connection.release();
+                            res.status(400).json({ message: error.message });
+                        });
+                    });
+            });
+        });
+    });
+});
+
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
