@@ -4,12 +4,21 @@ import ItemWindow from './ItemWindow';
 
 const Cart = ({ isUsername }) => {
     const [cartItems, setCartItems] = useState([]);
+    const [totalAmount, setTotalAmount] = useState(0);
 
     useEffect(() => {
         axios.get('/cart')
-            .then(response => setCartItems(response.data))
+            .then(response => {
+                setCartItems(response.data);
+                calculateTotal(response.data);
+            })
             .catch(error => console.error('Error fetching cart items:', error));
     }, []);
+
+    const calculateTotal = (items) => {
+        const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        setTotalAmount(total);
+    };
 
     const handleRemoveItem = (itemId, currentQuantity) => {
         let quantityToRemove = 1;
@@ -24,12 +33,16 @@ const Cart = ({ isUsername }) => {
 
         axios.delete(`/cart/${itemId}`, { data: { quantity: quantityToRemove } })
             .then(() => {
-                setCartItems(cartItems => cartItems.map(item => {
-                    if (item.id === itemId) {
-                        return { ...item, quantity: item.quantity - quantityToRemove };
-                    }
-                    return item;
-                }).filter(item => item.quantity > 0));
+                setCartItems(cartItems => {
+                    const updatedItems = cartItems.map(item => {
+                        if (item.id === itemId) {
+                            return { ...item, quantity: item.quantity - quantityToRemove };
+                        }
+                        return item;
+                    }).filter(item => item.quantity > 0);
+                    calculateTotal(updatedItems);
+                    return updatedItems;
+                });
             })
             .catch(error => console.error('Error removing item from cart:', error));
     };
@@ -48,6 +61,9 @@ const Cart = ({ isUsername }) => {
                 onDeleteItem={(itemId, currentQuantity) => handleRemoveItem(itemId, currentQuantity)}
                 isCartView={true}
             />
+            <div>
+                <h3>Total Amount: ${totalAmount.toFixed(2)}</h3>
+            </div>
             <button onClick={handleCheckout}>Checkout</button>
         </div>
     );
