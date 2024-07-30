@@ -2,8 +2,11 @@ import React from 'react';
 import { Button, TextField, Grid, ThemeProvider } from "@mui/material";
 import theme from './style/theme';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function SignupForm() {
+    const navigate = useNavigate();
+
     const handleSignup = (event) => {
         event.preventDefault();
         const username = event.target.username.value;
@@ -19,6 +22,7 @@ function SignupForm() {
         axios.post('/signup', data)
             .then(response => {
                 console.log(response.data);
+                navigate('/login'); // Navigate to the login page after successful signup
             })
             .catch(error => {
                 console.error(error);
