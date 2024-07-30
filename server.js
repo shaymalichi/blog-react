@@ -450,7 +450,23 @@ const logActivity = (user_id, username, type) => {
     });
 };
 
+app.put('/items/:id', (req, res) => {
+    const { id } = req.params;
+    const { name, description, price, stock, image_url } = req.body;
 
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "UPDATE items SET name = ?, description = ?, price = ?, stock = ?, image_url = ? WHERE id = ?";
+        connection.query(query, [name, description, price, stock, image_url, id], (error, results) => {
+            connection.release();
+            if (error) {
+                res.status(500).json({ error: 'Error updating item' });
+                throw error;
+            }
+            res.json({ message: 'Item updated successfully' });
+        });
+    });
+});
 
 
 const PORT = process.env.PORT || 5000;

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const EditItemComponent = ({ isUsername }) => {
     const { itemId } = useParams();
+    const navigate = useNavigate();
     const [item, setItem] = useState({
         name: '',
         description: '',
@@ -26,7 +27,10 @@ const EditItemComponent = ({ isUsername }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         axios.put(`/items/${itemId}`, item)
-            .then(() => alert('Item updated successfully!'))
+            .then(() => {
+                alert('Item updated successfully!');
+                navigate('/admin'); // Navigate back to the admin page after successful update
+            })
             .catch(error => console.error('Error updating item:', error));
     };
 
