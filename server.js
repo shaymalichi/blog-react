@@ -108,17 +108,21 @@ app.get('/items/:id', (req, res) => {
 });
 
 app.post('/add-item', (req, res) => {
-    const { name, description, price, stock, image_url, created_at, user_id } = req.body;
-    if (user_id !== 'admin') {
+    const { name, description, price, stock, image_url } = req.body;
+
+    if (!req.session.user_id || req.session.username !== 'admin') {
         return res.status(403).json({ message: 'Only admin can add items' });
     }
 
     pool.getConnection((err, connection) => {
         if (err) throw err;
-        const query = "INSERT INTO items (name, description, price, stock, image_url, created_at) VALUES (?, ?, ?, ?, ?, ?)";
-        connection.query(query, [name, description, price, stock, image_url, created_at], (error, results) => {
+        const query = "INSERT INTO items (name, description, price, stock, image_url) VALUES (?, ?, ?, ?, ?)";
+        connection.query(query, [name, description, price, stock, image_url], (error, results) => {
             connection.release();
-            if (error) throw error;
+            if (error) {
+                res.status(500).json({ error: 'Error adding item' });
+                throw error;
+            }
             res.json({ message: 'Item added successfully', new_item_id: results.insertId });
         });
     });

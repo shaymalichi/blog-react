@@ -14,6 +14,7 @@ import Cart from './Cart'; // New component
 import Admin from './Admin'; // New component
 import NewItem from './NewItem'; // New component
 import ThankYou from './ThankYou'; // New component
+import AddItemComponent from './AddItemComponent'; // New component
 
 function MainApp() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -54,6 +55,7 @@ function MainApp() {
                     <Route path="/cart" element={<Cart isUsername={isUsername} />} />
                     <Route path="/admin" element={<Admin isUsername={isUsername} />} />
                     <Route path="/new-item" element={isUsername === 'admin' ? <NewItem isUsername={isUsername} /> : <App isUsername={isUsername} />} />
+                    <Route path="/add-item" element={isUsername === 'admin' ? <AddItemComponent isUsername={isUsername} /> : <App isUsername={isUsername} />} /> {/* New route */}
                     <Route path="/thank-you" element={<ThankYou />} /> {/* New route */}
                 </Routes>
             </BrowserRouter>
