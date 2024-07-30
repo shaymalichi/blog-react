@@ -22,6 +22,7 @@ function SignupForm() {
         axios.post('/signup', data)
             .then(response => {
                 console.log(response.data);
+                alert('Signup successful! You can now log in.');
                 navigate('/login'); // Navigate to the login page after successful signup
             })
             .catch(error => {
