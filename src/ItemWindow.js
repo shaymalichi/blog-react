@@ -13,7 +13,7 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, isCartView }) => {
         } else {
             axios.post('/cart/add', { item_id: itemId })
                 .then(() => {
-                    console.log('Item added to cart');
+                    alert('Item added to cart');
                 })
                 .catch(error => {
                     console.error('Error adding item to cart:', error);
