@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import ItemWindow from './ItemWindow';
+import { Container, Box, Typography, Button } from '@mui/material';
 
 const Cart = ({ isUsername }) => {
     const [cartItems, setCartItems] = useState([]);
@@ -43,17 +44,29 @@ const Cart = ({ isUsername }) => {
     };
 
     return (
-        <div>
-            <h2>Cart</h2>
-            <ItemWindow
-                items={cartItems}
-                isUserName={isUsername}
-                onDeleteItem={handleRemoveItem}
-                context="cart"
-            />
-            <h3>Total: ${calculateTotal()}</h3>
-            <button onClick={handleCheckout}>Checkout</button>
-        </div>
+        <Container maxWidth="md">
+            <Box mt={5}>
+                <Typography variant="h4" gutterBottom>
+                    Cart
+                </Typography>
+                <ItemWindow
+                    items={cartItems}
+                    isUserName={isUsername}
+                    onDeleteItem={handleRemoveItem}
+                    context="cart"
+                />
+                <Box mt={3}>
+                    <Typography variant="h5">
+                        Total: ${calculateTotal()}
+                    </Typography>
+                    <Box mt={2}>
+                        <Button variant="contained" color="primary" onClick={handleCheckout}>
+                            Checkout
+                        </Button>
+                    </Box>
+                </Box>
+            </Box>
+        </Container>
     );
 };
 

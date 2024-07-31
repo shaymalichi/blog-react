@@ -1,65 +1,49 @@
 import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 
 function Navbar({ isLoggedIn, isUsername, handleLogout }) {
     if (!isLoggedIn) {
         return (
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/login">Login</Link>
-                    </li>
-                    <li>
-                        <Link to="/signup">Sign Up</Link>
-                    </li>
-                </ul>
-            </nav>
+            <AppBar position="static">
+                <Toolbar>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        Online Store
+                    </Typography>
+                    <Button color="inherit" component={Link} to="/">Home</Button>
+                    <Button color="inherit" component={Link} to="/login">Login</Button>
+                    <Button color="inherit" component={Link} to="/signup">Sign Up</Button>
+                </Toolbar>
+            </AppBar>
         );
     } else {
         return (
-            <nav>
-                <div>Hi, {isUsername}</div>
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/cart">Cart</Link>
-                    </li>
+            <AppBar position="static">
+                <Toolbar>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        Online Store
+                    </Typography>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        Hi, {isUsername}
+                    </Typography>
+                    <Button color="inherit" component={Link} to="/">Home</Button>
+                    <Button color="inherit" component={Link} to="/cart">Cart</Button>
                     {isUsername !== 'admin' && (
                         <>
-                            <li>
-                                <Link to="/change-username">Change Username</Link>
-                            </li>
-                            <li>
-                                <Link to="/past-orders">Past Orders</Link>
-                            </li>
-                            <li>
-                                <Link to="/wishlist">Wishlist</Link>
-                            </li>
-                            <li>
-                                <Link to="/reviews">Reviews</Link>
-                            </li>
-
+                            <Button color="inherit" component={Link} to="/change-username">Change Username</Button>
+                            <Button color="inherit" component={Link} to="/past-orders">Past Orders</Button>
+                            <Button color="inherit" component={Link} to="/wishlist">Wishlist</Button>
+                            <Button color="inherit" component={Link} to="/reviews">Reviews</Button>
                         </>
                     )}
                     {isUsername === 'admin' && (
                         <>
-                        <li>
-                                <Link to="/admin">Admin</Link>
-                            </li>
-                            <li>
-                                <Link to="/add-item">Add Item</Link>
-                            </li>
+                            <Button color="inherit" component={Link} to="/admin">Admin</Button>
+                            <Button color="inherit" component={Link} to="/add-item">Add Item</Button>
                         </>
                     )}
-                    <li>
-                        <Link to="/" onClick={handleLogout}>Logout</Link>
-                    </li>
-                </ul>
-            </nav>
+                    <Button color="inherit" component={Link} to="/" onClick={handleLogout}>Logout</Button>
+                </Toolbar>
+            </AppBar>
         );
     }
 }

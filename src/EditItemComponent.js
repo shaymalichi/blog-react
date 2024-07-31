@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Button, TextField, Typography, Grid, Container } from '@mui/material';
 
 const EditItemComponent = ({ isUsername }) => {
     const { itemId } = useParams();
@@ -35,32 +36,57 @@ const EditItemComponent = ({ isUsername }) => {
     };
 
     return (
-        <div>
-            <h2>Edit Item</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Name:
-                    <input type="text" name="name" value={item.name} onChange={handleChange} />
-                </label>
-                <label>
-                    Description:
-                    <textarea name="description" value={item.description} onChange={handleChange}></textarea>
-                </label>
-                <label>
-                    Price:
-                    <input type="number" name="price" value={item.price} onChange={handleChange} />
-                </label>
-                <label>
-                    Stock:
-                    <input type="number" name="stock" value={item.stock} onChange={handleChange} />
-                </label>
-                <label>
-                    Image URL:
-                    <input type="text" name="image_url" value={item.image_url} onChange={handleChange} />
-                </label>
-                <button type="submit">Update Item</button>
-            </form>
-        </div>
+        <Container>
+            <Grid container spacing={3} direction="column" alignItems="center" justifyContent="center">
+                <Grid item>
+                    <Typography variant="h4">Edit Item</Typography>
+                </Grid>
+                <Grid item>
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            label="Name"
+                            name="name"
+                            value={item.name}
+                            onChange={handleChange}
+                            required
+                        />
+                        <TextField
+                            label="Description"
+                            name="description"
+                            value={item.description}
+                            onChange={handleChange}
+                            multiline
+                            rows={4}
+                            required
+                        />
+                        <TextField
+                            label="Price"
+                            name="price"
+                            type="number"
+                            value={item.price}
+                            onChange={handleChange}
+                            required
+                        />
+                        <TextField
+                            label="Stock"
+                            name="stock"
+                            type="number"
+                            value={item.stock}
+                            onChange={handleChange}
+                            required
+                        />
+                        <TextField
+                            label="Image URL"
+                            name="image_url"
+                            value={item.image_url}
+                            onChange={handleChange}
+                            required
+                        />
+                        <Button type="submit" variant="contained" color="primary">Update Item</Button>
+                    </form>
+                </Grid>
+            </Grid>
+        </Container>
     );
 };
 

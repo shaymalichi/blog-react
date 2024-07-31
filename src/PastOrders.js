@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Container, Typography, Paper, Grid } from '@mui/material';
 
 const PastOrders = ({ isUsername }) => {
     const [orders, setOrders] = useState([]);
@@ -14,15 +15,15 @@ const PastOrders = ({ isUsername }) => {
     }, []);
 
     return (
-        <div>
-            <h2>Past Orders</h2>
+        <Container>
+            <Typography variant="h4" gutterBottom>Past Orders</Typography>
             {orders.length > 0 ? (
                 orders.map((order, index) => (
-                    <div key={index} className="order">
-                        <h3>Order ID: {order.id}</h3>
-                        <p>Date: {new Date(order.created_at).toLocaleDateString()}</p>
-                        <p>Total Amount: ${order.total_amount.toFixed(2)}</p>
-                        <h4>Items:</h4>
+                    <Paper key={index} style={{ padding: '16px', marginBottom: '16px' }}>
+                        <Typography variant="h6">Order ID: {order.id}</Typography>
+                        <Typography>Date: {new Date(order.created_at).toLocaleDateString()}</Typography>
+                        <Typography>Total Amount: ${order.total_amount.toFixed(2)}</Typography>
+                        <Typography variant="subtitle1">Items:</Typography>
                         <ul>
                             {order.items.map((item, itemIndex) => (
                                 <li key={itemIndex}>
@@ -30,12 +31,12 @@ const PastOrders = ({ isUsername }) => {
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </Paper>
                 ))
             ) : (
-                <p>No past orders found.</p>
+                <Typography>No past orders found.</Typography>
             )}
-        </div>
+        </Container>
     );
 };
 

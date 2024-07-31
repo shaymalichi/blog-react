@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ItemWindow from './ItemWindow';
+import { TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Container, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const Admin = ({ isUsername }) => {
     const [items, setItems] = useState([]);
@@ -42,35 +44,50 @@ const Admin = ({ isUsername }) => {
     const filteredActivities = activities.filter(activity => activity.username && activity.username.startsWith(filter));
 
     return (
-        <div>
-            <h2>Admin Panel</h2>
-            <input
-                type="text"
-                placeholder="Filter by username"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-            />
-            <table>
-                <thead>
-                <tr>
-                    <th>Date/Time</th>
-                    <th>Username</th>
-                    <th>Activity Type</th>
-                </tr>
-                </thead>
-                <tbody>
-                {filteredActivities.map(activity => (
-                    <tr key={activity.id}>
-                        <td>{activity.datetime}</td>
-                        <td>{activity.username}</td>
-                        <td>{activity.type}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            <h3>Manage Items</h3>
+        <Container>
+            <Typography variant="h4" component="h2" gutterBottom>
+                Admin Panel
+            </Typography>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="h5" component="h3">Activities</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <TextField
+                        label="Filter by username"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                    />
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Date/Time</TableCell>
+                                    <TableCell>Username</TableCell>
+                                    <TableCell>Activity Type</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {filteredActivities.map(activity => (
+                                    <TableRow key={activity.id}>
+                                        <TableCell>{activity.datetime}</TableCell>
+                                        <TableCell>{activity.username}</TableCell>
+                                        <TableCell>{activity.type}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </AccordionDetails>
+            </Accordion>
+            <Typography variant="h5" component="h3" gutterBottom>
+                Manage Items
+            </Typography>
             <ItemWindow items={items} isUserName={isUsername} onDeleteItem={handleDeleteItem} context="admin" />
-        </div>
+        </Container>
     );
 };
 

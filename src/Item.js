@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ItemWindow from "./ItemWindow";
+import { Container, Typography, CircularProgress } from "@mui/material";
 
 const Item = () => {
     const { id } = useParams();
@@ -25,27 +26,31 @@ const Item = () => {
     }, [id]);
 
     if (!item) {
-        return <div>Loading...</div>; // Show loading message while fetching data
+        return <CircularProgress />; // Show loading indicator while fetching data
     }
 
     return (
-        <div>
-            <h2>Item Details</h2>
+        <Container>
+            <Typography variant="h2" gutterBottom>
+                Item Details
+            </Typography>
             <ItemWindow items={[item]} isUserName={""} />
-            <h2>Reviews</h2>
+            <Typography variant="h2" gutterBottom>
+                Reviews
+            </Typography>
             {reviews.length > 0 ? (
                 reviews.map(review => (
                     <div key={review.id}>
-                        <h3>{review.title}</h3>
-                        <p>{review.body}</p>
-                        <p>Rating: {review.rating}</p>
-                        <p>By: {review.username}</p>
+                        <Typography variant="h3">{review.title}</Typography>
+                        <Typography variant="body1">{review.body}</Typography>
+                        <Typography variant="body2">Rating: {review.rating}</Typography>
+                        <Typography variant="body2">By: {review.username}</Typography>
                     </div>
                 ))
             ) : (
-                <p>No reviews found.</p>
+                <Typography variant="body1">No reviews found.</Typography>
             )}
-        </div>
+        </Container>
     );
 };
 

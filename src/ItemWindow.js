@@ -2,8 +2,9 @@ import React from 'react';
 import './style/ItemWindow.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { Button, Card, CardContent, Typography, CardActions } from '@mui/material';
 
-const ItemWindow = ({ items, isUserName, onDeleteItem, context, reviews }) => { // Add reviews prop
+const ItemWindow = ({ items, isUserName, onDeleteItem, context, reviews }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -66,62 +67,62 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, context, reviews }) => { 
     return (
         <div className="item-container">
             {items.map((item) => (
-                <div className="item-window" key={item.id}>
-                    <div className="item-header">
-                        <a
-                            href={`/items/${item.id}`}
-                            className="title"
-                            onClick={(event) => {
-                                event.preventDefault();
-                                handleViewItem(item.id);
-                            }}
-                        >
+                <Card className="item-window" key={item.id}>
+                    <CardContent>
+                        <Typography variant="h5" component="a" href={`/items/${item.id}`} onClick={(event) => { event.preventDefault(); handleViewItem(item.id); }}>
                             {item.name}
-                        </a>
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                            {item.description}
+                        </Typography>
+                        <Typography variant="body1" color="textPrimary">
+                            Price: ${item.price}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                            Stock: {context === 'cart' ? item.quantity : item.stock}
+                        </Typography>
+                        {item.image_url && <img src={item.image_url} alt={item.name} className="item-image" />}
+                        <Typography variant="body2" color="textSecondary">
+                            {item.created_at}
+                        </Typography>
+                    </CardContent>
+                    <CardActions>
                         {context === 'admin' && (
-                            <div>
-                                <button className="item-button" onClick={() => handleEditItem(item.id)}>Edit</button>
-                                <button className="item-button" onClick={() => handleDeleteItem(item.id)}>Delete</button>
-                            </div>
+                            <>
+                                <Button size="small" color="primary" onClick={() => handleEditItem(item.id)}>Edit</Button>
+                                <Button size="small" color="secondary" onClick={() => handleDeleteItem(item.id)}>Delete</Button>
+                            </>
                         )}
                         {context === 'cart' && (
-                            <button className="item-button" onClick={() => handleDeleteItem(item.id, item.quantity)}>Remove</button>
+                            <Button size="small" color="secondary" onClick={() => handleDeleteItem(item.id, item.quantity)}>Remove</Button>
                         )}
                         {context !== 'cart' && context !== 'admin' && (
                             <>
-                                <button className="item-button" onClick={() => handleAddToCart(item.id)}>Add to Cart</button>
+                                <Button size="small" color="primary" onClick={() => handleAddToCart(item.id)}>Add to Cart</Button>
                                 {isUserName && (
-                                    <button className="item-button" onClick={() => handleAddToWishlist(item.id)}>Add to Wishlist</button>
+                                    <Button size="small" color="primary" onClick={() => handleAddToWishlist(item.id)}>Add to Wishlist</Button>
                                 )}
                             </>
                         )}
-                    </div>
-                    <p className="content">{item.description}</p>
-                    <div className="footer">
-                        <span className="price">Price: ${item.price}</span>
-                        <span className="stock">Stock: {context === 'cart' ? item.quantity : item.stock}</span>
-                        <span className="Id">Item ID: {item.id}</span>
-                        {item.image_url && <img src={item.image_url} alt={item.name} className="item-image"/>}
-                        <span className="published-date">{item.created_at}</span>
-                    </div>
+                    </CardActions>
                     {reviews && (
-                        <div className="reviews-section">
-                            <h3>Reviews</h3>
+                        <CardContent>
+                            <Typography variant="h6">Reviews</Typography>
                             {reviews.length > 0 ? (
                                 reviews.map(review => (
                                     <div key={review.id}>
-                                        <h4>{review.title}</h4>
-                                        <p>{review.body}</p>
-                                        <p>Rating: {review.rating}</p>
-                                        <p>By: {review.username}</p>
+                                        <Typography variant="subtitle1">{review.title}</Typography>
+                                        <Typography variant="body2">{review.body}</Typography>
+                                        <Typography variant="body2">Rating: {review.rating}</Typography>
+                                        <Typography variant="body2">By: {review.username}</Typography>
                                     </div>
                                 ))
                             ) : (
-                                <p>No reviews found.</p>
+                                <Typography variant="body2">No reviews found.</Typography>
                             )}
-                        </div>
+                        </CardContent>
                     )}
-                </div>
+                </Card>
             ))}
         </div>
     );

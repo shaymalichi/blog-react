@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Container, Typography, Box } from '@mui/material';
 
 const AddItemComponent = ({ isUsername }) => {
     const navigate = useNavigate();
@@ -28,32 +29,64 @@ const AddItemComponent = ({ isUsername }) => {
     };
 
     return (
-        <div>
-            <h2>Add Item</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Name:
-                    <input type="text" name="name" value={item.name} onChange={handleChange} />
-                </label>
-                <label>
-                    Description:
-                    <textarea name="description" value={item.description} onChange={handleChange}></textarea>
-                </label>
-                <label>
-                    Price:
-                    <input type="number" name="price" value={item.price} onChange={handleChange} />
-                </label>
-                <label>
-                    Stock:
-                    <input type="number" name="stock" value={item.stock} onChange={handleChange} />
-                </label>
-                <label>
-                    Image URL:
-                    <input type="text" name="image_url" value={item.image_url} onChange={handleChange} />
-                </label>
-                <button type="submit">Add Item</button>
-            </form>
-        </div>
+        <Container maxWidth="sm">
+            <Box mt={5}>
+                <Typography variant="h4" component="h2" gutterBottom>
+                    Add Item
+                </Typography>
+                <form onSubmit={handleSubmit}>
+                    <TextField
+                        label="Name"
+                        name="name"
+                        value={item.name}
+                        onChange={handleChange}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Description"
+                        name="description"
+                        value={item.description}
+                        onChange={handleChange}
+                        fullWidth
+                        multiline
+                        rows={4}
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Price"
+                        name="price"
+                        type="number"
+                        value={item.price}
+                        onChange={handleChange}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Stock"
+                        name="stock"
+                        type="number"
+                        value={item.stock}
+                        onChange={handleChange}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Image URL"
+                        name="image_url"
+                        value={item.image_url}
+                        onChange={handleChange}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <Box mt={3}>
+                        <Button variant="contained" color="primary" type="submit" fullWidth>
+                            Add Item
+                        </Button>
+                    </Box>
+                </form>
+            </Box>
+        </Container>
     );
 };
 
