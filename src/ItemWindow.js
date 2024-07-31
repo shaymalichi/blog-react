@@ -28,7 +28,7 @@ const ItemWindow = ({ items = [], isUserName, onDeleteItem, isCartView }) => {
             if (isCartView) {
                 axios.delete(`/cart/${itemId}`, { data: { quantity: currentQuantity } })
                     .then(() => {
-                        onDeleteItem(itemId, currentQuantity);
+                        onDeleteItem(itemId);
                     })
                     .catch(error => {
                         console.error('Error removing item from cart:', error);

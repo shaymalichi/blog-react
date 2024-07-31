@@ -30,14 +30,14 @@ const Admin = ({ isUsername }) => {
         }
     };
 
-    const handleDeleteItem = (itemId) => {
-        axios.delete(`/items/${itemId}`)
-            .then(() => {
-                setItems(prevItems => prevItems.filter(item => item.id !== itemId));
-            })
-            .catch(error => {
-                console.error('Error deleting item:', error);
-            });
+    const handleDeleteItem = async (itemId) => {
+        try {
+            await axios.delete(`/items/${itemId}`);
+            // Directly update the state after deletion
+            setItems(prevItems => prevItems.filter(item => item.id !== itemId));
+        } catch (error) {
+            console.error('Error deleting item:', error);
+        }
     };
 
     const filteredActivities = activities.filter(activity => activity.username && activity.username.startsWith(filter));
