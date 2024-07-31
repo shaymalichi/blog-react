@@ -6,7 +6,10 @@ const PastOrders = ({ isUsername }) => {
 
     useEffect(() => {
         axios.get('/past-orders')
-            .then(response => setOrders(response.data))
+            .then(response => {
+                console.log(response.data); // Debugging log
+                setOrders(response.data);
+            })
             .catch(error => console.error('Error fetching past orders:', error));
     }, []);
 

@@ -566,6 +566,60 @@ app.post('/change-username', (req, res) => {
     });
 });
 
+app.get('/past-orders', (req, res) => {
+    const user_id = req.session.user_id;
+
+    if (!user_id) {
+        console.log('User not logged in');
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    pool.getConnection((err, connection) => {
+        if (err) {
+            console.error('Error connecting to database:', err);
+            throw err;
+        }
+
+        const query = `
+            SELECT o.id, o.total_amount, o.created_at, oi.item_id, oi.quantity, i.name, i.price
+            FROM orders o
+            JOIN order_items oi ON o.id = oi.order_id
+            JOIN items i ON oi.item_id = i.id
+            WHERE o.user_id = ?
+        `;
+        connection.query(query, [user_id], (error, results) => {
+            connection.release();
+            if (error) {
+                console.error('Error executing query:', error);
+                throw error;
+            }
+
+            console.log('Query results:', results); // Debugging log
+
+            const orders = {};
+            results.forEach(row => {
+                if (!orders[row.id]) {
+                    orders[row.id] = {
+                        id: row.id,
+                        total_amount: row.total_amount,
+                        created_at: row.created_at,
+                        items: []
+                    };
+                }
+                orders[row.id].items.push({
+                    item_id: row.item_id,
+                    name: row.name,
+                    price: row.price,
+                    quantity: row.quantity
+                });
+            });
+
+            res.json(Object.values(orders));
+        });
+    });
+});
+
+
 
 
 const PORT = process.env.PORT || 5000;
