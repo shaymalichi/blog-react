@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "./style/style.css";
 import axios from "axios";
 import ItemWindow from "./ItemWindow";
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
+import { Container, Typography, TextField, Box } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import theme from "./style/theme";
 
@@ -26,26 +26,25 @@ function App({ isUsername }) {
     };
 
     return (
-        <div>
-            <ThemeProvider theme={theme(blue)}>
-                <main>
-                    <h1>Welcome to My Online Store</h1>
-                    <div className="search-bar">
-                        <input
-                            type="text"
-                            placeholder="Search items..."
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                        />
-                    </div>
-                    <div className="content">
-                        <ItemWindow items={items} isUserName={isUsername} onDeleteItem={null} context="home" />
-                        <div className="sideposts">
-                        </div>
-                    </div>
-                </main>
-            </ThemeProvider>
-        </div>
+        <ThemeProvider theme={theme(blue)}>
+            <Container>
+                <Typography variant="h2" gutterBottom>
+                    Welcome to My Online Store
+                </Typography>
+                <Box sx={{ mb: 3 }}>
+                    <TextField
+                        fullWidth
+                        label="Search items..."
+                        variant="outlined"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                    />
+                </Box>
+                <Box>
+                    <ItemWindow items={items} isUserName={isUsername} onDeleteItem={null} context="home" />
+                </Box>
+            </Container>
+        </ThemeProvider>
     );
 }
 
