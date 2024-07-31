@@ -387,7 +387,7 @@ app.post('/checkout', (req, res) => {
 
             // Get cart items for the user
             const query = `
-                SELECT items.id, items.name, items.stock, cart.quantity
+                SELECT items.id, items.name, items.price, items.stock, cart.quantity
                 FROM cart
                 JOIN items ON cart.item_id = items.id
                 WHERE cart.user_id = ?
@@ -400,52 +400,83 @@ app.post('/checkout', (req, res) => {
                     });
                 }
 
-                // Update the stock for each item
-                const updateStockPromises = cartItems.map(item => {
-                    return new Promise((resolve, reject) => {
-                        const newStock = item.stock - item.quantity;
-                        if (newStock < 0) {
-                            return reject(new Error(`Not enough stock for item: ${item.name}`));
-                        }
-                        const updateQuery = "UPDATE items SET stock = ? WHERE id = ?";
-                        connection.query(updateQuery, [newStock, item.id], (err, result) => {
-                            if (err) return reject(err);
-                            resolve(result);
+                // Calculate total amount
+                const totalAmount = cartItems.reduce((total, item) => {
+                    return total + item.price * item.quantity;
+                }, 0);
+
+                // Insert new order
+                const orderQuery = "INSERT INTO orders (user_id, total_amount) VALUES (?, ?)";
+                connection.query(orderQuery, [user_id, totalAmount], (error, orderResult) => {
+                    if (error) {
+                        return connection.rollback(() => {
+                            connection.release();
+                            throw error;
                         });
-                    });
-                });
+                    }
 
-                Promise.all(updateStockPromises)
-                    .then(() => {
-                        // Clear the cart
-                        const deleteQuery = "DELETE FROM cart WHERE user_id = ?";
-                        connection.query(deleteQuery, [user_id], (error, results) => {
-                            if (error) {
-                                return connection.rollback(() => {
-                                    connection.release();
-                                    throw error;
-                                });
-                            }
+                    const orderId = orderResult.insertId;
 
-                            // Commit the transaction
-                            connection.commit(err => {
-                                if (err) {
-                                    return connection.rollback(() => {
-                                        connection.release();
-                                        throw err;
-                                    });
-                                }
+                    // Insert order items
+                    const orderItemsQuery = "INSERT INTO order_items (order_id, item_id, quantity) VALUES ?";
+                    const orderItemsValues = cartItems.map(item => [orderId, item.id, item.quantity]);
+
+                    connection.query(orderItemsQuery, [orderItemsValues], (error, result) => {
+                        if (error) {
+                            return connection.rollback(() => {
                                 connection.release();
-                                res.json({ message: 'Checkout successful' });
+                                throw error;
+                            });
+                        }
+
+                        // Update the stock for each item
+                        const updateStockPromises = cartItems.map(item => {
+                            return new Promise((resolve, reject) => {
+                                const newStock = item.stock - item.quantity;
+                                if (newStock < 0) {
+                                    return reject(new Error(`Not enough stock for item: ${item.name}`));
+                                }
+                                const updateQuery = "UPDATE items SET stock = ? WHERE id = ?";
+                                connection.query(updateQuery, [newStock, item.id], (err, result) => {
+                                    if (err) return reject(err);
+                                    resolve(result);
+                                });
                             });
                         });
-                    })
-                    .catch(error => {
-                        connection.rollback(() => {
-                            connection.release();
-                            res.status(400).json({ message: error.message });
-                        });
+
+                        Promise.all(updateStockPromises)
+                            .then(() => {
+                                // Clear the cart
+                                const deleteQuery = "DELETE FROM cart WHERE user_id = ?";
+                                connection.query(deleteQuery, [user_id], (error, results) => {
+                                    if (error) {
+                                        return connection.rollback(() => {
+                                            connection.release();
+                                            throw error;
+                                        });
+                                    }
+
+                                    // Commit the transaction
+                                    connection.commit(err => {
+                                        if (err) {
+                                            return connection.rollback(() => {
+                                                connection.release();
+                                                throw err;
+                                            });
+                                        }
+                                        connection.release();
+                                        res.json({ message: 'Checkout successful' });
+                                    });
+                                });
+                            })
+                            .catch(error => {
+                                connection.rollback(() => {
+                                    connection.release();
+                                    res.status(400).json({ message: error.message });
+                                });
+                            });
                     });
+                });
             });
         });
     });

@@ -14,6 +14,7 @@ import NewItem from './NewItem';
 import ThankYou from './ThankYou';
 import AddItemComponent from './AddItemComponent';
 import ChangeUsername from './ChangeUsername';
+import PastOrders from './PastOrders';
 
 function MainApp() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -33,7 +34,7 @@ function MainApp() {
                 setIsLoggedIn(false);
                 setTheUsername("");
                 localStorage.removeItem('username');
-                window.location.href = '/login'; // Redirect to the login page
+                window.location.href = '/login';
             })
             .catch(error => {
                 console.error('Error occurred during logout:', error);
@@ -55,6 +56,7 @@ function MainApp() {
                     <Route path="/new-item" element={isUsername === 'admin' ? <NewItem isUsername={isUsername} /> : <App isUsername={isUsername} />} />
                     <Route path="/add-item" element={isUsername === 'admin' ? <AddItemComponent isUsername={isUsername} /> : <App isUsername={isUsername} />} />
                     <Route path="/thank-you" element={<ThankYou />} />
+                    <Route path="/past-orders" element={<PastOrders isUsername={isUsername} />} />
                     <Route path="/change-username" element={isLoggedIn && isUsername !== 'admin' ? <ChangeUsername setTheUsername={setTheUsername} /> : <App isUsername={isUsername} />} />
                 </Routes>
             </BrowserRouter>

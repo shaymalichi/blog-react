@@ -29,10 +29,15 @@ function Navbar({ isLoggedIn, isUsername, handleLogout }) {
                         <Link to="/cart">Cart</Link>
                     </li>
                     {isUsername !== 'admin' && (
-                        <li>
-                            <Link to="/change-username">Change Username</Link>
-                        </li>
-                    )}
+                        <>
+                            <li>
+                                <Link to="/change-username">Change Username</Link>
+                            </li>
+                            <li>
+                                <Link to="/past-orders">Past Orders</Link>
+                            </li>
+                            </>
+                        )}
                     {isUsername === 'admin' && (
                         <>
                             <li>
