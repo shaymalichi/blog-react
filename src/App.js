@@ -39,7 +39,7 @@ function App({ isUsername }) {
                         />
                     </div>
                     <div className="content">
-                        <ItemWindow items={items} isUserName={isUsername} onDeleteItem={setItems} />
+                        <ItemWindow items={items} isUserName={isUsername} onDeleteItem={null} context="home" />
                         <div className="sideposts">
                         </div>
                     </div>

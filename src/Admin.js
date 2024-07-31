@@ -33,7 +33,6 @@ const Admin = ({ isUsername }) => {
     const handleDeleteItem = async (itemId) => {
         try {
             await axios.delete(`/items/${itemId}`);
-            // Directly update the state after deletion
             setItems(prevItems => prevItems.filter(item => item.id !== itemId));
         } catch (error) {
             console.error('Error deleting item:', error);
@@ -70,7 +69,7 @@ const Admin = ({ isUsername }) => {
                 </tbody>
             </table>
             <h3>Manage Items</h3>
-            <ItemWindow items={items} isUserName={isUsername} onDeleteItem={handleDeleteItem} />
+            <ItemWindow items={items} isUserName={isUsername} onDeleteItem={handleDeleteItem} context="admin" />
         </div>
     );
 };

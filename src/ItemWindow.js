@@ -1,11 +1,10 @@
 import React from 'react';
 import './style/ItemWindow.css';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const ItemWindow = ({ items = [], isUserName, onDeleteItem, isCartView }) => {
+const ItemWindow = ({ items = [], isUserName, onDeleteItem, context }) => {
     const navigate = useNavigate();
-    const location = useLocation();
 
     const handleAddToCart = (itemId) => {
         if (!isUserName) {
@@ -25,7 +24,7 @@ const ItemWindow = ({ items = [], isUserName, onDeleteItem, isCartView }) => {
         const isConfirmed = window.confirm('Are you sure you want to delete this item?');
 
         if (isConfirmed) {
-            if (isCartView) {
+            if (context === 'cart') {
                 axios.delete(`/cart/${itemId}`, { data: { quantity: currentQuantity } })
                     .then(() => {
                         onDeleteItem(itemId);
@@ -68,23 +67,23 @@ const ItemWindow = ({ items = [], isUserName, onDeleteItem, isCartView }) => {
                         >
                             {item.name}
                         </a>
-                        {isUserName === 'admin' && (
+                        {context === 'admin' && (
                             <div>
                                 <button className="item-button" onClick={() => handleEditItem(item.id)}>Edit</button>
                                 <button className="item-button" onClick={() => handleDeleteItem(item.id)}>Delete</button>
                             </div>
                         )}
-                        {!isCartView && (
+                        {context === 'home' && (
                             <button className="item-button" onClick={() => handleAddToCart(item.id)}>Add to Cart</button>
                         )}
-                        {isCartView && (
+                        {context === 'cart' && (
                             <button className="item-button" onClick={() => handleDeleteItem(item.id, item.quantity)}>Remove</button>
                         )}
                     </div>
                     <p className="content">{item.description}</p>
                     <div className="footer">
                         <span className="price">Price: ${item.price}</span>
-                        {isCartView ? (
+                        {context === 'cart' ? (
                             <span className="stock">Quantity: {item.quantity}</span>
                         ) : (
                             <span className="stock">Stock: {item.stock}</span>
