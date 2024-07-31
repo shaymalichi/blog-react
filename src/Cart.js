@@ -13,10 +13,18 @@ const Cart = ({ isUsername }) => {
             .catch(error => console.error('Error fetching cart items:', error));
     }, []);
 
-    const handleRemoveItem = (itemId) => {
-        axios.delete(`/cart/${itemId}`)
+    const handleRemoveItem = (itemId, quantityToRemove) => {
+        axios.delete(`/cart/${itemId}`, { data: { quantity: quantityToRemove } })
             .then(() => {
-                setCartItems(cartItems.filter(item => item.id !== itemId));
+                setCartItems(cartItems.map(item => {
+                    if (item.id === itemId) {
+                        return {
+                            ...item,
+                            quantity: item.quantity - quantityToRemove
+                        };
+                    }
+                    return item;
+                }).filter(item => item.quantity > 0));
             })
             .catch(error => console.error('Error removing item from cart:', error));
     };
