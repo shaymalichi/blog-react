@@ -495,6 +495,47 @@ app.put('/items/:id', (req, res) => {
     });
 });
 
+app.post('/change-username', (req, res) => {
+    const { newUsername } = req.body;
+
+    // Check if the user is logged in
+    if (!req.session.user_id) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+
+        // Check if the new username already exists
+        const checkQuery = "SELECT * FROM users WHERE username = ?";
+        connection.query(checkQuery, [newUsername], (error, results) => {
+            if (error) {
+                connection.release();
+                return res.status(500).json({ message: 'Error checking username' });
+            }
+
+            if (results.length > 0) {
+                connection.release();
+                return res.status(400).json({ message: 'Username already exists' });
+            }
+
+            // Update the username
+            const updateQuery = "UPDATE users SET username = ? WHERE id = ?";
+            connection.query(updateQuery, [newUsername, req.session.user_id], (error, results) => {
+                connection.release();
+                if (error) {
+                    return res.status(500).json({ message: 'Error updating username' });
+                }
+
+                // Update the session username
+                req.session.username = newUsername;
+                res.json({ message: 'Username updated successfully' });
+            });
+        });
+    });
+});
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
