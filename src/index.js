@@ -16,6 +16,7 @@ import AddItemComponent from './AddItemComponent';
 import ChangeUsername from './ChangeUsername';
 import PastOrders from './PastOrders';
 import Wishlist from './Wishlist';
+import Reviews from './Reviews'; // New component
 
 function MainApp() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -59,6 +60,7 @@ function MainApp() {
                     <Route path="/thank-you" element={<ThankYou />} />
                     <Route path="/past-orders" element={<PastOrders isUsername={isUsername} />} />
                     <Route path="/wishlist" element={<Wishlist />} /> {/* New route */}
+                    <Route path="/reviews" element={<Reviews />} /> {/* New route */}
                     <Route path="/change-username" element={isLoggedIn && isUsername !== 'admin' ? <ChangeUsername setTheUsername={setTheUsername} /> : <App isUsername={isUsername} />} />
                 </Routes>
             </BrowserRouter>

@@ -681,6 +681,62 @@ app.delete('/wishlist/:id', (req, res) => {
     });
 });
 
+app.get('/reviews', (req, res) => {
+    const user_id = req.session.user_id;
+
+    if (!user_id) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = `
+            SELECT r.id, r.item_id, i.name, r.rating, r.comment, r.created_at
+            FROM reviews r
+            JOIN items i ON r.item_id = i.id
+            WHERE r.user_id = ?
+        `;
+        connection.query(query, [user_id], (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json(results);
+        });
+    });
+});
+
+app.post('/reviews/add', (req, res) => {
+    const user_id = req.session.user_id;
+    const { item_id, rating, comment } = req.body;
+
+    if (!user_id) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "INSERT INTO reviews (user_id, item_id, rating, comment) VALUES (?, ?, ?, ?)";
+        connection.query(query, [user_id, item_id, rating, comment], (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json({ message: 'Review added' });
+        });
+    });
+});
+
+app.get('/reviews/:item_id', (req, res) => {
+    const { item_id } = req.params;
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "SELECT * FROM reviews WHERE item_id = ?";
+        connection.query(query, [item_id], (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json(results);
+        });
+    });
+});
+
+
 
 
 

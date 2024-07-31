@@ -3,7 +3,7 @@ import './style/ItemWindow.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-const ItemWindow = ({ items, isUserName, onDeleteItem, context }) => {
+const ItemWindow = ({ items, isUserName, onDeleteItem, context, reviews }) => { // Add reviews prop
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -100,9 +100,27 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, context }) => {
                     <div className="footer">
                         <span className="price">Price: ${item.price}</span>
                         <span className="stock">Stock: {context === 'cart' ? item.quantity : item.stock}</span>
-                        {item.image_url && <img src={item.image_url} alt={item.name} className="item-image" />}
+                        <span className="Id">Item ID: {item.id}</span>
+                        {item.image_url && <img src={item.image_url} alt={item.name} className="item-image"/>}
                         <span className="published-date">{item.created_at}</span>
                     </div>
+                    {reviews && (
+                        <div className="reviews-section">
+                            <h3>Reviews</h3>
+                            {reviews.length > 0 ? (
+                                reviews.map(review => (
+                                    <div key={review.id}>
+                                        <h4>{review.title}</h4>
+                                        <p>{review.body}</p>
+                                        <p>Rating: {review.rating}</p>
+                                        <p>By: {review.username}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No reviews found.</p>
+                            )}
+                        </div>
+                    )}
                 </div>
             ))}
         </div>
