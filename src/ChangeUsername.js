@@ -9,6 +9,7 @@ const ChangeUsername = () => {
         event.preventDefault();
         axios.post('/change-username', { newUsername })
             .then(response => {
+                alert("Username changed to " + newUsername + "\nLogin again for username to update");
                 setMessage(response.data.message);
             })
             .catch(error => {
