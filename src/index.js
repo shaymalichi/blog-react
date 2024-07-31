@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App';
-import About from './staticComponents/about'; // Update or remove if not needed
-import Contact from './staticComponents/Contact'; // Update or remove if not needed
 import Navbar from './Navbar';
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignUpForm";
@@ -48,8 +46,6 @@ function MainApp() {
                 <Navbar key={isUsername} isLoggedIn={isLoggedIn} isUsername={isUsername} handleLogout={handleLogout} />
                 <Routes>
                     <Route path="/" element={<App isUsername={isUsername} />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/contact" element={<Contact />} />
                     <Route path="/login" element={<LoginForm setIsLoggedIn={setIsLoggedIn} setTheUsername={setTheUsername} />} />
                     <Route path="/signup" element={<SignupForm />} />
                     <Route path="/items/:id" element={<Item isUsername={isUsername} />} />
