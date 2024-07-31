@@ -36,11 +36,14 @@ function Navbar({ isLoggedIn, isUsername, handleLogout }) {
                             <li>
                                 <Link to="/past-orders">Past Orders</Link>
                             </li>
-                            </>
-                        )}
+                            <li>
+                                <Link to="/wishlist">Wishlist</Link>
+                            </li>
+                        </>
+                    )}
                     {isUsername === 'admin' && (
                         <>
-                            <li>
+                        <li>
                                 <Link to="/admin">Admin</Link>
                             </li>
                             <li>

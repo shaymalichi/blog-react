@@ -17,6 +17,16 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, context }) => {
             });
     };
 
+    const handleAddToWishlist = (itemId) => {
+        axios.post('/wishlist/add', { item_id: itemId })
+            .then(() => {
+                alert('Item added to wishlist');
+            })
+            .catch(error => {
+                console.error('Error adding item to wishlist:', error);
+            });
+    };
+
     const handleDeleteItem = (itemId, currentQuantity) => {
         if (context === 'cart') {
             const quantityToRemove = parseInt(prompt(`Enter quantity to remove (1-${currentQuantity}):`), 10);
@@ -78,7 +88,12 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, context }) => {
                             <button className="item-button" onClick={() => handleDeleteItem(item.id, item.quantity)}>Remove</button>
                         )}
                         {context !== 'cart' && context !== 'admin' && (
-                            <button className="item-button" onClick={() => handleAddToCart(item.id)}>Add to Cart</button>
+                            <>
+                                <button className="item-button" onClick={() => handleAddToCart(item.id)}>Add to Cart</button>
+                                {isUserName && (
+                                    <button className="item-button" onClick={() => handleAddToWishlist(item.id)}>Add to Wishlist</button>
+                                )}
+                            </>
                         )}
                     </div>
                     <p className="content">{item.description}</p>

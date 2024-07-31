@@ -620,6 +620,69 @@ app.get('/past-orders', (req, res) => {
 });
 
 
+app.get('/wishlist', (req, res) => {
+    const user_id = req.session.user_id;
+
+    if (!user_id) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = `
+            SELECT w.id, w.item_id, i.name, i.price, i.image_url, w.created_at
+            FROM wishlist w
+            JOIN items i ON w.item_id = i.id
+            WHERE w.user_id = ?
+        `;
+        connection.query(query, [user_id], (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json(results);
+        });
+    });
+});
+
+app.post('/wishlist/add', (req, res) => {
+    const user_id = req.session.user_id;
+    const { item_id } = req.body;
+
+    if (!user_id) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "INSERT INTO wishlist (user_id, item_id) VALUES (?, ?)";
+        connection.query(query, [user_id, item_id], (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json({ message: 'Item added to wishlist' });
+        });
+    });
+});
+
+app.delete('/wishlist/:id', (req, res) => {
+    const user_id = req.session.user_id;
+    const { id } = req.params;
+
+    if (!user_id) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "DELETE FROM wishlist WHERE id = ? AND user_id = ?";
+        connection.query(query, [id, user_id], (error, results) => {
+            connection.release();
+            if (error) throw error;
+            res.json({ message: 'Item removed from wishlist' });
+        });
+    });
+});
+
+
+
 
 
 const PORT = process.env.PORT || 5000;
