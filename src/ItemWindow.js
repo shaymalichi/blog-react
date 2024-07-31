@@ -3,7 +3,7 @@ import './style/ItemWindow.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-const ItemWindow = ({ items, isUserName, onDeleteItem, isCartView }) => {
+const ItemWindow = ({ items = [], isUserName, onDeleteItem, isCartView }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -25,7 +25,23 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, isCartView }) => {
         const isConfirmed = window.confirm('Are you sure you want to delete this item?');
 
         if (isConfirmed) {
-            onDeleteItem(itemId, currentQuantity);
+            if (isCartView) {
+                axios.delete(`/cart/${itemId}`, { data: { quantity: currentQuantity } })
+                    .then(() => {
+                        onDeleteItem(itemId, currentQuantity);
+                    })
+                    .catch(error => {
+                        console.error('Error removing item from cart:', error);
+                    });
+            } else {
+                axios.delete(`/items/${itemId}`)
+                    .then(() => {
+                        onDeleteItem(itemId);
+                    })
+                    .catch(error => {
+                        console.error('Error deleting item:', error);
+                    });
+            }
         }
     };
 
@@ -39,7 +55,7 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, isCartView }) => {
 
     return (
         <div className="item-container">
-            {items.map((item) => (
+            {Array.isArray(items) && items.map((item) => (
                 <div className="item-window" key={item.id}>
                     <div className="item-header">
                         <a
@@ -55,7 +71,7 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, isCartView }) => {
                         {isUserName === 'admin' && (
                             <div>
                                 <button className="item-button" onClick={() => handleEditItem(item.id)}>Edit</button>
-                                <button className="item-button" onClick={() => handleDeleteItem(item.id, item.quantity)}>Delete</button>
+                                <button className="item-button" onClick={() => handleDeleteItem(item.id)}>Delete</button>
                             </div>
                         )}
                         {!isCartView && (

@@ -344,6 +344,29 @@ app.delete('/cart/:item_id', (req, res) => {
     });
 });
 
+app.delete('/items/:id', (req, res) => {
+    const { id } = req.params;
+
+    // Check if the user is admin
+    if (!req.session.user_id || req.session.username !== 'admin') {
+        return res.status(403).json({ message: 'Only admin can delete items' });
+    }
+
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = "DELETE FROM items WHERE id = ?";
+        connection.query(query, [id], (error, results) => {
+            connection.release();
+            if (error) {
+                res.status(500).json({ error: 'Error deleting item' });
+                throw error;
+            }
+            res.json({ message: 'Item deleted successfully' });
+        });
+    });
+});
+
+
 app.post('/checkout', (req, res) => {
     const user_id = req.session.user_id;
 

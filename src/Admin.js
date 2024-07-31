@@ -1,17 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import ItemWindow from './ItemWindow';
 
 const Admin = ({ isUsername }) => {
+    const [items, setItems] = useState([]);
     const [activities, setActivities] = useState([]);
     const [filter, setFilter] = useState("");
 
     useEffect(() => {
-        axios.get('/admin/activities')
-            .then(response => setActivities(response.data))
-            .catch(error => console.error('Error fetching activities:', error));
+        fetchItems();
+        fetchActivities();
     }, []);
 
-    const filteredActivities = activities.filter(activity => activity.username.startsWith(filter));
+    const fetchItems = async () => {
+        try {
+            const response = await axios.get('/items');
+            setItems(response.data);
+        } catch (error) {
+            console.error('Error fetching items:', error);
+        }
+    };
+
+    const fetchActivities = async () => {
+        try {
+            const response = await axios.get('/admin/activities');
+            setActivities(response.data);
+        } catch (error) {
+            console.error('Error fetching activities:', error);
+        }
+    };
+
+    const handleDeleteItem = (itemId) => {
+        axios.delete(`/items/${itemId}`)
+            .then(() => {
+                setItems(prevItems => prevItems.filter(item => item.id !== itemId));
+            })
+            .catch(error => {
+                console.error('Error deleting item:', error);
+            });
+    };
+
+    const filteredActivities = activities.filter(activity => activity.username && activity.username.startsWith(filter));
 
     return (
         <div>
@@ -40,6 +69,8 @@ const Admin = ({ isUsername }) => {
                 ))}
                 </tbody>
             </table>
+            <h3>Manage Items</h3>
+            <ItemWindow items={items} isUserName={isUsername} onDeleteItem={handleDeleteItem} />
         </div>
     );
 };
