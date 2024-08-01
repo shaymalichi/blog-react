@@ -67,11 +67,3 @@ CREATE TABLE reviews (
                          comment TEXT,
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
--- Insert initial admin user
-INSERT INTO users (username, created_at, password, profile_info) VALUES (
-                                                                            'admin',
-                                                                            CURRENT_TIMESTAMP,
-                                                                            '$2a$10$E./1FJd5nW.T2oxKgU8WnO2F.s9vMPNmF4V8lJx5M.f8nbCU.ZY8y', -- bcrypt hash for 'admin'
-                                                                            'Admin user'
-                                                                        );

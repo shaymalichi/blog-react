@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 
 const dbFile = path.join(__dirname, 'online_store_db.sqlite');
 const sqlFile = path.join(__dirname, 'initialize_db.sql');
@@ -25,6 +26,8 @@ const initDb = () => {
 };
 
 const insertInitialData = () => {
+    const adminPasswordHash = bcrypt.hashSync('admin', bcrypt.genSaltSync());
+
     const items = [
         {
             name: 'Laptop',
@@ -68,24 +71,46 @@ const insertInitialData = () => {
         }
     ];
 
-    const insertItem = db.prepare("INSERT INTO items (name, description, price, stock, image_url, created_at) VALUES (?, ?, ?, ?, ?, ?)");
-
-    items.forEach(item => {
-        insertItem.run(item.name, item.description, item.price, item.stock, item.image_url, item.created_at, (err) => {
+    db.serialize(() => {
+        // Check if admin user exists
+        db.get("SELECT COUNT(*) AS count FROM users WHERE username = ?", ['admin'], (err, row) => {
             if (err) {
-                console.error('Error inserting item', err);
+                console.error('Error checking admin user', err);
                 process.exit(1);
             }
+            if (row.count === 0) {
+                // Insert admin user if not exists
+                db.run("INSERT INTO users (username, created_at, password, profile_info) VALUES (?, ?, ?, ?)",
+                    ['admin', new Date().toISOString().slice(0, 19).replace('T', ' '), adminPasswordHash, 'Admin user'], (err) => {
+                        if (err) {
+                            console.error('Error inserting admin user', err);
+                            process.exit(1);
+                        }
+                    });
+            } else {
+                console.log('Admin user already exists');
+            }
         });
-    });
 
-    insertItem.finalize((err) => {
-        if (err) {
-            console.error('Error finalizing statement', err);
-            process.exit(1);
-        }
-        console.log('Initial data inserted successfully');
-        db.close();
+        // Insert items
+        const insertItem = db.prepare("INSERT INTO items (name, description, price, stock, image_url, created_at) VALUES (?, ?, ?, ?, ?, ?)");
+        items.forEach(item => {
+            insertItem.run(item.name, item.description, item.price, item.stock, item.image_url, item.created_at, (err) => {
+                if (err) {
+                    console.error('Error inserting item', err);
+                    process.exit(1);
+                }
+            });
+        });
+
+        insertItem.finalize((err) => {
+            if (err) {
+                console.error('Error finalizing statement', err);
+                process.exit(1);
+            }
+            console.log('Initial data inserted successfully');
+            db.close();
+        });
     });
 };
 
