@@ -506,8 +506,8 @@ app.post('/reviews/add', (req, res) => {
         return res.status(401).json({ message: 'User not logged in' });
     }
 
-    // First, find the item_id by product_name
-    const findItemQuery = "SELECT id FROM items WHERE name = ?";
+    // First, find the item_id by product_name (case-insensitive)
+    const findItemQuery = "SELECT id FROM items WHERE LOWER(name) = LOWER(?)";
     db.get(findItemQuery, [product_name], (error, item) => {
         if (error) throw error;
 
