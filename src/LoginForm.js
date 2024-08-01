@@ -22,11 +22,11 @@ function LoginForm({ setIsLoggedIn, setTheUsername }) {
                     setTheUsername(username);
                     localStorage.setItem('username', username);
                 } else {
-                    console.log("Login failed");
+                    alert("Login failed: Invalid username or password");
                 }
             })
             .catch(error => {
-                console.error("Error occurred during login:", error);
+                alert("Error occurred during login: " + error.response.data.error);
             });
     };
 

@@ -4,7 +4,7 @@ import { Container, TextField, Button, Typography, Paper, Grid } from '@mui/mate
 
 const Reviews = ({ isUsername }) => {
     const [reviews, setReviews] = useState([]);
-    const [newReview, setNewReview] = useState({ item_id: '', rating: '', comment: '' });
+    const [newReview, setNewReview] = useState({ item_id: '', rating: '' });
 
     useEffect(() => {
         axios.get('/reviews')
@@ -17,7 +17,7 @@ const Reviews = ({ isUsername }) => {
         axios.post('/reviews/add', newReview)
             .then(response => {
                 setReviews([...reviews, { ...newReview, id: response.data.insertId }]);
-                setNewReview({ item_id: '', rating: '', comment: '' });
+                setNewReview({ item_id: '', rating: '' });
             })
             .catch(error => console.error('Error adding review:', error));
     };
@@ -30,7 +30,6 @@ const Reviews = ({ isUsername }) => {
                     <Paper key={review.id} style={{ padding: '16px', marginBottom: '16px' }}>
                         <Typography variant="h6">{review.name}</Typography>
                         <Typography>Rating: {review.rating}</Typography>
-                        <Typography>Comment: {review.comment}</Typography>
                         <Typography>Date: {new Date(review.created_at).toLocaleDateString()}</Typography>
                     </Paper>
                 ))
@@ -58,16 +57,6 @@ const Reviews = ({ isUsername }) => {
                             onChange={(e) => setNewReview({ ...newReview, rating: e.target.value })}
                             required
                             inputProps={{ min: 1, max: 5 }}
-                            fullWidth
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            label="Comment"
-                            multiline
-                            rows={4}
-                            value={newReview.comment}
-                            onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
                             fullWidth
                         />
                     </Grid>

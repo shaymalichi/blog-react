@@ -27,7 +27,7 @@ const Wishlist = ({ isUsername }) => {
                     <Paper key={item.id} style={{ padding: '16px', marginBottom: '16px' }}>
                         <Typography variant="h6">{item.name}</Typography>
                         <Typography>Price: ${item.price}</Typography>
-                        {item.image_url && <img src={item.image_url} alt={item.name} style={{ maxWidth: '100%' }} />}
+                        {item.image_url && <img src={item.image_url} alt={item.name} style={{ width: '250px', height: '250px', objectFit: 'cover' }} />}
                         <Button variant="contained" color="secondary" onClick={() => handleRemoveItem(item.id)}>Remove from Wishlist</Button>
                     </Paper>
                 ))

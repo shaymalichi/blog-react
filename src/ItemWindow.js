@@ -99,7 +99,7 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, context, reviews }) => {
                         {context !== 'cart' && context !== 'admin' && (
                             <>
                                 <Button size="small" color="primary" onClick={() => handleAddToCart(item.id)}>Add to Cart</Button>
-                                {isUserName && (
+                                {isUserName && isUserName !== 'admin' && (
                                     <Button size="small" color="primary" onClick={() => handleAddToWishlist(item.id)}>Add to Wishlist</Button>
                                 )}
                             </>
