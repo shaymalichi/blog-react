@@ -9,13 +9,17 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, context, reviews }) => {
     const location = useLocation();
 
     const handleAddToCart = (itemId) => {
-        axios.post('/cart/add', { item_id: itemId })
-            .then(() => {
-                alert('Item added to cart');
-            })
-            .catch(error => {
-                console.error('Error adding item to cart:', error);
-            });
+        if (!isUserName) {
+            navigate('/login');
+        } else {
+            axios.post('/cart/add', { item_id: itemId })
+                .then(() => {
+                    alert('Item added to cart');
+                })
+                .catch(error => {
+                    console.error('Error adding item to cart:', error);
+                });
+        }
     };
 
     const handleAddToWishlist = (itemId) => {
