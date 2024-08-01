@@ -34,7 +34,7 @@ const Item = () => {
             <Typography variant="h2" gutterBottom>
                 Item Details
             </Typography>
-            <ItemWindow items={[item]} isUserName={""} />
+            <ItemWindow items={[item]} isUserName={""} context="item" />
             <Typography variant="h2" gutterBottom>
                 Reviews
             </Typography>

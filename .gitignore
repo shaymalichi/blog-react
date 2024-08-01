@@ -23,3 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 settings.py
+
+# db
+online_store_db.sqlite
+sessions
