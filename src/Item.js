@@ -41,10 +41,10 @@ const Item = () => {
             {reviews.length > 0 ? (
                 reviews.map(review => (
                     <div key={review.id}>
-                        <Typography variant="h3">{review.title}</Typography>
-                        <Typography variant="body1">{review.body}</Typography>
-                        <Typography variant="body2">Rating: {review.rating}</Typography>
+                        <Typography variant="h6">Rating: {review.rating}</Typography>
+                        <Typography variant="body1">Comment: {review.comment}</Typography>
                         <Typography variant="body2">By: {review.username}</Typography>
+                        <Typography variant="body2">Date: {new Date(review.created_at).toLocaleDateString()}</Typography>
                     </div>
                 ))
             ) : (

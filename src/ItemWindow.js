@@ -73,9 +73,15 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, context, reviews }) => {
             {items.map((item) => (
                 <Card className="item-window" key={item.id}>
                     <CardContent>
-                        <Typography variant="h5" component="a" href={`/items/${item.id}`} onClick={(event) => { event.preventDefault(); handleViewItem(item.id); }}>
-                            {item.name}
-                        </Typography>
+                        {context === 'item' ? (
+                            <Typography variant="h5">
+                                {item.name}
+                            </Typography>
+                        ) : (
+                            <Typography variant="h5" component="a" href={`/items/${item.id}`} onClick={(event) => { event.preventDefault(); handleViewItem(item.id); }}>
+                                {item.name}
+                            </Typography>
+                        )}
                         <Typography variant="body2" color="textSecondary">
                             {item.description}
                         </Typography>

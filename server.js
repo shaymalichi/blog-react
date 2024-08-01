@@ -487,7 +487,7 @@ app.get('/reviews', (req, res) => {
     }
 
     const query = `
-        SELECT r.id, r.item_id, i.name, r.rating, r.comment, r.created_at
+        SELECT r.id, r.item_id, i.name AS product_name, r.rating, r.comment, r.created_at
         FROM reviews r
         JOIN items i ON r.item_id = i.id
         WHERE r.user_id = ?
@@ -500,22 +500,38 @@ app.get('/reviews', (req, res) => {
 
 app.post('/reviews/add', (req, res) => {
     const user_id = req.session.user_id;
-    const { item_id, rating, comment } = req.body;
+    const { product_name, rating, comment } = req.body;
 
     if (!user_id) {
         return res.status(401).json({ message: 'User not logged in' });
     }
 
-    const query = "INSERT INTO reviews (user_id, item_id, rating, comment) VALUES (?, ?, ?, ?)";
-    db.run(query, [user_id, item_id, rating, comment], (error) => {
+    // First, find the item_id by product_name
+    const findItemQuery = "SELECT id FROM items WHERE name = ?";
+    db.get(findItemQuery, [product_name], (error, item) => {
         if (error) throw error;
-        res.json({ message: 'Review added' });
+
+        if (!item) {
+            return res.status(400).json({ message: 'Product not found' });
+        }
+
+        const item_id = item.id;
+        const insertReviewQuery = "INSERT INTO reviews (user_id, item_id, rating, comment) VALUES (?, ?, ?, ?)";
+        db.run(insertReviewQuery, [user_id, item_id, rating, comment], function(error) {
+            if (error) throw error;
+            res.json({ message: 'Review added', insertId: this.lastID });
+        });
     });
 });
 
 app.get('/reviews/:item_id', (req, res) => {
     const { item_id } = req.params;
-    const query = "SELECT * FROM reviews WHERE item_id = ?";
+    const query = `
+        SELECT r.id, r.rating, r.comment, r.created_at, u.username
+        FROM reviews r
+        JOIN users u ON r.user_id = u.id
+        WHERE r.item_id = ?
+    `;
     db.all(query, [item_id], (error, results) => {
         if (error) throw error;
         res.json(results);

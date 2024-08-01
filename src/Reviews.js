@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, TextField, Button, Typography, Paper, Grid } from '@mui/material';
 
-const Reviews = ({ isUsername }) => {
+const Reviews = () => {
     const [reviews, setReviews] = useState([]);
-    const [newReview, setNewReview] = useState({ item_id: '', rating: '' });
+    const [newReview, setNewReview] = useState({ product_name: '', rating: '', comment: '' });
 
     useEffect(() => {
         axios.get('/reviews')
@@ -17,7 +17,7 @@ const Reviews = ({ isUsername }) => {
         axios.post('/reviews/add', newReview)
             .then(response => {
                 setReviews([...reviews, { ...newReview, id: response.data.insertId }]);
-                setNewReview({ item_id: '', rating: '' });
+                setNewReview({ product_name: '', rating: '', comment: '' });
             })
             .catch(error => console.error('Error adding review:', error));
     };
@@ -28,9 +28,10 @@ const Reviews = ({ isUsername }) => {
             {reviews.length > 0 ? (
                 reviews.map((review) => (
                     <Paper key={review.id} style={{ padding: '16px', marginBottom: '16px' }}>
-                        <Typography variant="h6">{review.name}</Typography>
+                        <Typography variant="h6">{review.product_name}</Typography>
                         <Typography>Rating: {review.rating}</Typography>
                         <Typography>Date: {new Date(review.created_at).toLocaleDateString()}</Typography>
+                        <Typography>Comment: {review.comment}</Typography>
                     </Paper>
                 ))
             ) : (
@@ -41,10 +42,9 @@ const Reviews = ({ isUsername }) => {
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <TextField
-                            label="Item ID"
-                            type="number"
-                            value={newReview.item_id}
-                            onChange={(e) => setNewReview({ ...newReview, item_id: e.target.value })}
+                            label="Product Name"
+                            value={newReview.product_name}
+                            onChange={(e) => setNewReview({ ...newReview, product_name: e.target.value })}
                             required
                             fullWidth
                         />
@@ -57,6 +57,14 @@ const Reviews = ({ isUsername }) => {
                             onChange={(e) => setNewReview({ ...newReview, rating: e.target.value })}
                             required
                             inputProps={{ min: 1, max: 5 }}
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Comment"
+                            value={newReview.comment}
+                            onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
                             fullWidth
                         />
                     </Grid>
