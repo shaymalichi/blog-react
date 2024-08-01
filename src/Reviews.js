@@ -5,6 +5,7 @@ import { Container, TextField, Button, Typography, Paper, Grid } from '@mui/mate
 const Reviews = () => {
     const [reviews, setReviews] = useState([]);
     const [newReview, setNewReview] = useState({ product_name: '', rating: '', comment: '' });
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         axios.get('/reviews')
@@ -18,8 +19,15 @@ const Reviews = () => {
             .then(response => {
                 setReviews([...reviews, { ...newReview, id: response.data.insertId }]);
                 setNewReview({ product_name: '', rating: '', comment: '' });
+                setErrorMessage('');
             })
-            .catch(error => console.error('Error adding review:', error));
+            .catch(error => {
+                if (error.response && error.response.status === 400) {
+                    setErrorMessage(error.response.data.message);
+                } else {
+                    console.error('Error adding review:', error);
+                }
+            });
     };
 
     return (
@@ -38,6 +46,7 @@ const Reviews = () => {
                 <Typography>No reviews found.</Typography>
             )}
             <Typography variant="h5" gutterBottom>Add a New Review</Typography>
+            {errorMessage && <Typography color="error">{errorMessage}</Typography>}
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
