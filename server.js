@@ -31,6 +31,10 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/build/index.html');
 });
 
+app.get('/readme.html', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
 app.route('/items')
     .get((req, res) => {
         const { search } = req.query;

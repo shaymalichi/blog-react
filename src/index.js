@@ -18,7 +18,8 @@ import AddItemComponent from './AddItemComponent';
 import ChangeUsername from './ChangeUsername';
 import PastOrders from './PastOrders';
 import Wishlist from './Wishlist';
-import Reviews from './Reviews'; // New component
+import Reviews from './Reviews';
+import Readme from './Readme';
 
 const theme = createTheme();
 
@@ -68,6 +69,7 @@ function MainApp() {
                         <Route path="/wishlist" element={<Wishlist />} /> {/* New route */}
                         <Route path="/reviews" element={<Reviews />} /> {/* New route */}
                         <Route path="/change-username" element={isLoggedIn && isUsername !== 'admin' ? <ChangeUsername setTheUsername={setTheUsername} /> : <App isUsername={isUsername} />} />
+                        <Route path="/readme.html" element={<Readme />} /> {/* New route */}
                     </Routes>
                 </BrowserRouter>
             </ThemeProvider>
