@@ -54,7 +54,7 @@ function getAllItems(res) {
 
 function searchItems(search, res) {
     const query = "SELECT id, name, description, price, stock, image_url, created_at FROM items WHERE name LIKE ? OR description LIKE ?";
-    const searchTerm = `%${search}%`;
+    const searchTerm = `${search}%`;
     db.all(query, [searchTerm, searchTerm], (error, results) => {
         if (error) throw error;
         res.json(results.map(r => ({

@@ -37,9 +37,6 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, context, reviews }) => {
             const quantityToRemove = parseInt(prompt(`Enter quantity to remove (1-${currentQuantity}):`), 10);
             if (quantityToRemove > 0 && quantityToRemove <= currentQuantity) {
                 axios.delete(`/cart/${itemId}`, { data: { quantity: quantityToRemove } })
-                    .then(() => {
-                        onDeleteItem(itemId, quantityToRemove);
-                    })
                     .catch(error => {
                         console.error('Error removing item from cart:', error);
                     });
@@ -50,9 +47,6 @@ const ItemWindow = ({ items, isUserName, onDeleteItem, context, reviews }) => {
             const isConfirmed = window.confirm('Are you sure you want to delete this item?');
             if (isConfirmed) {
                 axios.delete(`/items/${itemId}`)
-                    .then(() => {
-                        onDeleteItem(itemId);
-                    })
                     .catch(error => {
                         console.error('Error deleting item:', error);
                     });
