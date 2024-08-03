@@ -32,6 +32,7 @@
   "scripts": {
     "start": "react-scripts start",
     "init-db": "node persist.js",
+    "server": "node persist.js && node server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
