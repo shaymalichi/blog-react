@@ -20,6 +20,10 @@ const AddItemComponent = ({ isUsername }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (item.stock < 0 || item.price < 0) {
+            alert("you cannot assign negative number for price and stock")
+            return
+        }
         axios.post('/add-item', item)
             .then(() => {
                 alert('Item added successfully!');

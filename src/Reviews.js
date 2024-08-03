@@ -38,7 +38,7 @@ const Reviews = () => {
                     <Paper key={review.id} style={{ padding: '16px', marginBottom: '16px' }}>
                         <Typography variant="h6">{review.product_name}</Typography>
                         <Typography>Rating: {review.rating}</Typography>
-                        <Typography>Date: {new Date(review.created_at).toLocaleDateString()}</Typography>
+                        <Typography>Date: {review.created_at ? new Date(review.created_at).toLocaleDateString() : new Date()}</Typography>
                         <Typography>Comment: {review.comment}</Typography>
                     </Paper>
                 ))
