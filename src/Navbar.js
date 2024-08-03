@@ -11,6 +11,7 @@ function Navbar({ isLoggedIn, isUsername, handleLogout }) {
                     </Typography>
                     <Button color="inherit" component={Link} to="/">Home</Button>
                     <Button color="inherit" component={Link} to="/readme.html">ReadMe</Button>
+                    <Button color="inherit" component={Link} to="/llm.html">LLM</Button>
                     <Button color="inherit" component={Link} to="/login">Login</Button>
                     <Button color="inherit" component={Link} to="/signup">Sign Up</Button>
                 </Toolbar>

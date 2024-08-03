@@ -20,6 +20,7 @@ import PastOrders from './PastOrders';
 import Wishlist from './Wishlist';
 import Reviews from './Reviews';
 import Readme from './Readme';
+import LLMGeneratedCode from './LLMGeneratedCode';
 
 const theme = createTheme();
 
@@ -70,6 +71,7 @@ function MainApp() {
                         <Route path="/reviews" element={<Reviews />} /> {/* New route */}
                         <Route path="/change-username" element={isLoggedIn && isUsername !== 'admin' ? <ChangeUsername setTheUsername={setTheUsername} /> : <App isUsername={isUsername} />} />
                         <Route path="/readme.html" element={<Readme />} /> {/* New route */}
+                        <Route path="/llm.html" element={<LLMGeneratedCode />} />
                     </Routes>
                 </BrowserRouter>
             </ThemeProvider>
